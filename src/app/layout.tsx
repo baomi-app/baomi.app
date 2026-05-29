@@ -23,22 +23,22 @@ export const metadata: Metadata = {
     template: "%s · baomi",
   },
   description:
-    "baomi builds small, sharp apps that do one thing well. Meet Pop, the instant macOS screenshot tool, and People's RSS, a privacy-first feed reader.",
-  keywords: ["baomi", "Pop", "screenshot", "macOS", "People's RSS", "RSS reader"],
+    "Small tools by baomi — fast, focused, and a pleasure to use. Each app does one thing well.",
+  keywords: ["baomi", "apps", "macOS", "tools", "open source"],
   authors: [{ name: "baomi" }],
   openGraph: {
     type: "website",
     url: siteUrl,
     title: "baomi — small, sharp apps",
     description:
-      "Small, sharp apps that do one thing well. Pop for screenshots, People's RSS for feeds.",
+      "Small tools by baomi — fast, focused, and a pleasure to use. Each app does one thing well.",
     siteName: "baomi",
   },
   twitter: {
     card: "summary_large_image",
     title: "baomi — small, sharp apps",
     description:
-      "Small, sharp apps that do one thing well. Pop for screenshots, People's RSS for feeds.",
+      "Small tools by baomi — fast, focused, and a pleasure to use. Each app does one thing well.",
   },
 };
 

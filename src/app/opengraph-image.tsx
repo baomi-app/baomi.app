@@ -73,7 +73,7 @@ export default function OpengraphImage() {
             Small, sharp apps that do one thing well.
           </div>
           <div style={{ display: "flex", fontSize: 34, color: "rgba(255,255,255,0.55)" }}>
-            Pop · People&apos;s RSS — baomi.app
+            Small tools by baomi — baomi.app
           </div>
         </div>
       </div>
