@@ -23,7 +23,17 @@ export type RepoMeta = {
 export type AppView = AppConfig & {
   content: AppContent;
   meta: RepoMeta | null;
+  /** Absolute URL to the app's icon, resolved from content.icon, or null. */
+  iconUrl: string | null;
 };
+
+function resolveIconUrl(config: AppConfig, content: AppContent): string | null {
+  const icon = content.icon;
+  if (!icon) return null;
+  if (/^https?:\/\//.test(icon)) return icon;
+  const branch = config.branch ?? "main";
+  return `https://raw.githubusercontent.com/${config.repo}/${branch}/${icon}`;
+}
 
 function ghHeaders(): HeadersInit {
   const headers: Record<string, string> = {
@@ -85,7 +95,7 @@ export async function getAppView(config: AppConfig): Promise<AppView> {
     getAppContent(config),
     getRepoMeta(config.repo),
   ]);
-  return { ...config, content, meta };
+  return { ...config, content, meta, iconUrl: resolveIconUrl(config, content) };
 }
 
 export async function getAllAppViews(): Promise<AppView[]> {

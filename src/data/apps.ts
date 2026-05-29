@@ -13,6 +13,8 @@ export type AppLink = {
 export type AppContent = {
   name: string;
   status: "released" | "beta" | "wip";
+  /** Icon: a path relative to the repo root (e.g. "icon.png") or an absolute URL. */
+  icon?: string;
   platform: L;
   tagline: L;
   description: L;
@@ -30,7 +32,6 @@ export type AppConfig = {
   id: string; // URL slug, e.g. "pop"
   repo: string; // "owner/name" on GitHub
   accent: string; // tailwind gradient classes "from-... to-..."
-  image?: string; // icon in /public; falls back to the name's initial
   branch?: string; // default "main"
   contentFile?: string; // default "baomi.json"
 };
@@ -40,7 +41,6 @@ export const apps: AppConfig[] = [
     id: "pop",
     repo: "baomi-app/pop",
     accent: "from-amber-400 to-orange-500",
-    image: "/pop.png",
   },
   {
     id: "rss",
@@ -61,6 +61,7 @@ export const fallbackContent: Record<string, AppContent> = {
   pop: {
     name: "Pop",
     status: "released",
+    icon: "icon.png",
     platform: { en: "macOS", zh: "macOS" },
     tagline: {
       en: "A macOS screenshot tool — click, instant capture.",
@@ -98,6 +99,7 @@ export const fallbackContent: Record<string, AppContent> = {
   rss: {
     name: "People's RSS",
     status: "released",
+    icon: "icon.svg",
     platform: { en: "Web", zh: "网页" },
     tagline: {
       en: "A minimal RSS / Atom reader on Vercel, with bring-your-own-key AI summaries.",

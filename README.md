@@ -1,12 +1,82 @@
 # baomi.app
 
-The website for **baomi** — small, sharp apps that do one thing well.
+The website for **baomi** — small, sharp apps that do one thing well. Live at **[baomi.app](https://baomi.app)**.
 
-Built with Next.js + Tailwind, deployed on Vercel.
+Built with Next.js 16 + Tailwind, deployed on Vercel. Bilingual (EN / 中文).
+
+## How it works
+
+Each app shown on the site is split into two parts:
+
+- **Registration + presentation** lives here, in [`src/data/apps.ts`](src/data/apps.ts): just the URL slug, the GitHub repo, and an accent color.
+- **Content** (all the bilingual text + the icon) lives in the **app's own repo**, in a `baomi.json` file on its default branch. The site fetches it from `raw.githubusercontent.com` and refreshes hourly (ISR) — so editing `baomi.json` updates the site without touching this repo or redeploying.
+- **Live stats** (latest version, star count, last-updated date) are pulled from the GitHub API, also hourly.
+
+So adding or updating an app does **not** require changing this website's code (beyond the one-time registration).
+
+## Add a new app
+
+1. **Drop a `baomi.json` in the app's repo** (root of the default branch). See the spec below.
+2. **Register it** in [`src/data/apps.ts`](src/data/apps.ts):
+   ```ts
+   { id: "myapp", repo: "owner/myapp", accent: "from-emerald-400 to-teal-500" }
+   ```
+   - `id` is the URL slug → the detail page is `/myapp`.
+   - `accent` is any Tailwind gradient pair.
+
+The home-page card and the `/<id>` detail page are generated automatically. The app count on the home page is just how many apps are registered.
+
+> Apps are **not** auto-discovered from a GitHub org — registration is explicit, so apps can live in any org (e.g. People's RSS is under `people-s-organization`) and you control order and which repos appear.
+
+## `baomi.json` spec
+
+Full JSON Schema: [`baomi.schema.json`](baomi.schema.json). All user-facing text is required in both `en` and `zh`.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `name` | string | Brand name (not localized) |
+| `status` | `"released"` \| `"beta"` \| `"wip"` | Shown as a badge; label is localized by the site |
+| `icon` | string (optional) | Repo-relative path (`"icon.png"`, `"icon.svg"`) or an absolute URL. Falls back to the name's first letter |
+| `platform` | `{ en, zh }` | e.g. `{ "en": "macOS", "zh": "macOS" }` |
+| `tagline` | `{ en, zh }` | One line, shown on the card and detail header |
+| `description` | `{ en, zh }` | A short paragraph on the detail page |
+| `features` | `{ en: string[], zh: string[] }` | Bullet list on the detail page |
+| `tech` | string[] | Tech-stack tags (not localized) |
+| `links` | `{ label: { en, zh }, href }[]` | Buttons in order; **first = primary**, rest = secondary |
+
+Example:
+
+```json
+{
+  "name": "Pop",
+  "status": "released",
+  "icon": "icon.png",
+  "platform": { "en": "macOS", "zh": "macOS" },
+  "tagline": { "en": "A macOS screenshot tool.", "zh": "macOS 截图工具。" },
+  "description": { "en": "…", "zh": "…" },
+  "features": { "en": ["…"], "zh": ["…"] },
+  "tech": ["Swift", "AppKit"],
+  "links": [
+    { "label": { "en": "Download", "zh": "下载" }, "href": "https://…" },
+    { "label": { "en": "GitHub", "zh": "GitHub" }, "href": "https://…" }
+  ]
+}
+```
+
+## Development
 
 ```bash
 npm install
-npm run dev
+npm run dev      # http://localhost:3000
+npm run build
 ```
 
-App content lives in [`src/data/apps.ts`](src/data/apps.ts).
+### Environment
+
+| Var | Required | Purpose |
+| --- | --- | --- |
+| `GITHUB_TOKEN` | recommended | Lifts the GitHub API rate limit so version / stars / updated render reliably. A classic token with **no scopes** is enough (read-only public data). Content (`baomi.json`) works without it. |
+
+## What's hardcoded in this repo
+
+UI chrome and branding — the nav, hero copy, section headings, status-badge labels, the logo, the OG share image, and the i18n strings — all live here (mostly [`src/i18n.tsx`](src/i18n.tsx)). Per-app content does not.

@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://baomi.app/baomi.schema.json",
+  "title": "baomi.json",
+  "description": "Bilingual app content consumed by baomi.app. Place this file at the root of an app's repo (default branch). All user-facing text is required in both `en` and `zh`.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "status", "platform", "tagline", "description", "features", "tech", "links"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Display name of the app (brand name, not localized)."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["released", "beta", "wip"],
+      "description": "released = shipped; beta = public testing; wip = in progress."
+    },
+    "icon": {
+      "type": "string",
+      "description": "Path to an icon image relative to the repo root (e.g. \"icon.png\", \"icon.svg\") or an absolute https URL. Optional — falls back to the name's first letter on a gradient tile."
+    },
+    "platform": { "$ref": "#/$defs/localized" },
+    "tagline": { "$ref": "#/$defs/localized" },
+    "description": { "$ref": "#/$defs/localized" },
+    "features": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["en", "zh"],
+      "properties": {
+        "en": { "type": "array", "items": { "type": "string" } },
+        "zh": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "tech": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Tech-stack tags (not localized), e.g. [\"Swift\", \"AppKit\"]."
+    },
+    "links": {
+      "type": "array",
+      "description": "Action buttons, in order. The first is the primary (solid) button; the rest are secondary (outline).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["label", "href"],
+        "properties": {
+          "label": { "$ref": "#/$defs/localized" },
+          "href": { "type": "string", "format": "uri" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "localized": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["en", "zh"],
+      "properties": {
+        "en": { "type": "string" },
+        "zh": { "type": "string" }
+      }
+    }
+  }
+}
