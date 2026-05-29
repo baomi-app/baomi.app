@@ -20,20 +20,20 @@ const STORAGE_KEY = "baomi.locale";
 export const ui = {
   brand: {
     // baomi's own studio tagline. (Pop's "咔，一爆即得" slogan lives on Pop.)
-    tagline: { en: "Small, sharp apps", zh: "小而精，只做好一件事" },
+    tagline: { en: "Small, sharp, and focused.", zh: "小而精悍，专注一事" },
   },
   nav: {
     apps: { en: "Apps", zh: "应用" },
   },
   hero: {
-    badge: { en: "Independent apps, built with care", zh: "独立开发，用心打磨" },
+    badge: { en: "Let tools be tools", zh: "让工具回归工具" },
     // EN keeps a trailing space before the gradient accent; ZH has none (no
     // space after a full-width comma). The Hero joins them without inserting one.
-    titleLead: { en: "Small, sharp apps that ", zh: "小而精的应用，" },
-    titleAccent: { en: "do one thing well.", zh: "只把一件事做好。" },
+    titleLead: { en: "Agile in form, ", zh: "敏捷于形，" },
+    titleAccent: { en: "focused on one.", zh: "专精于一。" },
     subtitle: {
-      en: "Small tools by baomi — fast, focused, and a pleasure to use.",
-      zh: "baomi 做的小工具，轻快、专注，越用越顺手。",
+      en: "Lightweight tools by baomi — pure, agile, and a pleasure at your fingertips.",
+      zh: "来自 baomi 的轻量工具 —— 纯粹、敏捷，悦于指尖。",
     },
     ctaExplore: { en: "Explore the apps", zh: "看看应用" },
     ctaGithub: { en: "View on GitHub", zh: "在 GitHub 查看" },
@@ -41,8 +41,8 @@ export const ui = {
   apps: {
     heading: { en: "The apps", zh: "全部应用" },
     sub: {
-      en: "Open source. Built to be fast and stay out of your way.",
-      zh: "开源。快，而且不打扰你。",
+      en: "Focused, native utility apps that do one thing and stay out of your way.",
+      zh: "专注特定功能的原生工具，用完即走。",
     },
     count: { en: "apps", zh: "个应用" },
     viewDetails: { en: "View details", zh: "查看详情" },

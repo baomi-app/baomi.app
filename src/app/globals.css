@@ -10,6 +10,9 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-space: var(--font-space-grotesk);
+  --font-sora: var(--font-sora);
+  --font-poppins: var(--font-poppins);
 }
 
 html {

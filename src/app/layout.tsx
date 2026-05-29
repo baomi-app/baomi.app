@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Space_Grotesk, Sora, Poppins } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { LocaleProvider } from "@/i18n";
 import "./globals.css";
@@ -14,13 +14,29 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+});
+
+const sora = Sora({
+  variable: "--font-sora",
+  subsets: ["latin"],
+});
+
+const poppins = Poppins({
+  variable: "--font-poppins",
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+});
+
 const siteUrl = "https://baomi.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "baomi — small, sharp apps",
-    template: "%s · baomi",
+    default: "baomi.app — small, sharp apps",
+    template: "%s · baomi.app",
   },
   description:
     "Small tools by baomi — fast, focused, and a pleasure to use. Each app does one thing well.",
@@ -29,14 +45,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: siteUrl,
-    title: "baomi — small, sharp apps",
+    title: "baomi.app — small, sharp apps",
     description:
       "Small tools by baomi — fast, focused, and a pleasure to use. Each app does one thing well.",
-    siteName: "baomi",
+    siteName: "baomi.app",
   },
   twitter: {
     card: "summary_large_image",
-    title: "baomi — small, sharp apps",
+    title: "baomi.app — small, sharp apps",
     description:
       "Small tools by baomi — fast, focused, and a pleasure to use. Each app does one thing well.",
   },
@@ -50,7 +66,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${sora.variable} ${poppins.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <LocaleProvider>{children}</LocaleProvider>
