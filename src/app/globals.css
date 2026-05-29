@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0a0b;
+  --foreground: #ededed;
 }
 
 @theme inline {
@@ -12,15 +12,43 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Animated grain-free aurora used behind the hero */
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -24px, 0) scale(1.08);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 14s ease-in-out infinite;
+}
+
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-pop-in {
+  animation: pop-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
