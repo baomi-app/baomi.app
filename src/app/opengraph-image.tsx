@@ -48,8 +48,16 @@ export default function OpengraphImage() {
               justifyContent: "center",
             }}
           >
-            <svg width="58" height="58" viewBox="0 0 24 24" fill="#1a1205">
-              <path d="M12 2c.55 7 3.45 9.9 10 10.5-6.55.6-9.45 3.5-10 10.5-.55-7-3.45-9.9-10-10.5C8.55 11.9 11.45 9 12 2z" />
+            <svg width="62" height="62" viewBox="0 0 32 32">
+              <rect x="8.8" y="5.5" width="3.6" height="21" rx="1.8" fill="#1a1205" />
+              <circle
+                cx="16.4"
+                cy="19.7"
+                r="6.4"
+                fill="none"
+                stroke="#1a1205"
+                strokeWidth="3.6"
+              />
             </svg>
           </div>
           <div style={{ display: "flex", fontSize: 56, fontWeight: 700, color: "#fff" }}>

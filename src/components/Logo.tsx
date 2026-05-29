@@ -34,17 +34,15 @@ export function BaomiMark({ className = "" }: { className?: string }) {
         </linearGradient>
       </defs>
       <rect x="0" y="0" width="32" height="32" rx="9" fill="url(#baomi-grad)" />
-      {/* big "pop" sparkle */}
-      <path
-        d="M16 6c.55 5.6 2.8 7.85 8.4 8.4-5.6.55-7.85 2.8-8.4 8.4-.55-5.6-2.8-7.85-8.4-8.4 5.6-.55 7.85-2.8 8.4-8.4z"
-        fill="#1a1205"
-        fillOpacity="0.9"
-      />
-      {/* small accent sparkle */}
-      <path
-        d="M24 5.5c.16 1.6.8 2.24 2.4 2.4-1.6.16-2.24.8-2.4 2.4-.16-1.6-.8-2.24-2.4-2.4 1.6-.16 2.24-.8 2.4-2.4z"
-        fill="#1a1205"
-        fillOpacity="0.65"
+      {/* lowercase "b" monogram */}
+      <rect x="8.8" y="5.5" width="3.6" height="21" rx="1.8" fill="#1a1205" />
+      <circle
+        cx="16.4"
+        cy="19.7"
+        r="6.4"
+        fill="none"
+        stroke="#1a1205"
+        strokeWidth="3.6"
       />
     </svg>
   );
