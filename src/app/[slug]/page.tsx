@@ -21,6 +21,7 @@ export async function generateMetadata({
   const config = getConfig(slug);
   if (!config) return { title: "Not found" };
   const content = await getAppContent(config);
+  if (!content) return { title: config.id };
   return {
     title: content.name,
     description: content.tagline.en,
@@ -41,6 +42,7 @@ export default async function AppPage({
   if (!config) notFound();
 
   const view = await getAppView(config);
+  if (!view) notFound();
 
   return (
     <>

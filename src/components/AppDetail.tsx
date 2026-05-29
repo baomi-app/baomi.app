@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { AppIcon } from "@/components/AppIcon";
 import { RepoStats } from "@/components/RepoStats";
+import { accentGradient } from "@/data/apps";
 import type { AppView } from "@/data/github";
 import { ui, useLocale } from "@/i18n";
 
@@ -15,7 +16,8 @@ export function AppDetail({ app }: { app: AppView }) {
     <section className="relative overflow-hidden">
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
         <div
-          className={`animate-float-slow absolute -top-32 left-1/3 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-gradient-to-br ${app.accent} opacity-20 blur-[120px]`}
+          style={{ backgroundImage: accentGradient(content.accent) }}
+          className="animate-float-slow absolute -top-32 left-1/3 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full opacity-20 blur-[120px]"
         />
       </div>
 
@@ -80,7 +82,8 @@ export function AppDetail({ app }: { app: AppView }) {
             {features.map((feature) => (
               <li key={feature} className="flex items-start gap-3 text-white/70">
                 <span
-                  className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gradient-to-br ${app.accent}`}
+                  style={{ backgroundImage: accentGradient(content.accent) }}
+                  className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full"
                 />
                 {feature}
               </li>

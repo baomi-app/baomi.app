@@ -5,12 +5,7 @@
 //   - Each app's bilingual content comes from `baomi.json` in its own repo,
 //     fetched from raw.githubusercontent.com (CDN, no rate limit / token).
 
-import {
-  apps,
-  fallbackContent,
-  type AppConfig,
-  type AppContent,
-} from "@/data/apps";
+import { apps, type AppConfig, type AppContent } from "@/data/apps";
 
 const REVALIDATE_SECONDS = 3600; // refresh at most once per hour
 
@@ -73,7 +68,9 @@ export async function getRepoMeta(repo: string): Promise<RepoMeta | null> {
   };
 }
 
-export async function getAppContent(config: AppConfig): Promise<AppContent> {
+export async function getAppContent(
+  config: AppConfig
+): Promise<AppContent | null> {
   const branch = config.branch ?? "main";
   const file = config.contentFile ?? "baomi.json";
   try {
@@ -85,19 +82,21 @@ export async function getAppContent(config: AppConfig): Promise<AppContent> {
       return (await res.json()) as AppContent;
     }
   } catch {
-    // fall through to bundled content
+    // no content → the app is omitted (see getAppView)
   }
-  return fallbackContent[config.id];
+  return null;
 }
 
-export async function getAppView(config: AppConfig): Promise<AppView> {
+export async function getAppView(config: AppConfig): Promise<AppView | null> {
   const [content, meta] = await Promise.all([
     getAppContent(config),
     getRepoMeta(config.repo),
   ]);
+  if (!content) return null;
   return { ...config, content, meta, iconUrl: resolveIconUrl(config, content) };
 }
 
 export async function getAllAppViews(): Promise<AppView[]> {
-  return Promise.all(apps.map(getAppView));
+  const views = await Promise.all(apps.map(getAppView));
+  return views.filter((v): v is AppView => v !== null);
 }

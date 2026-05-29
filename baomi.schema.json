@@ -20,6 +20,16 @@
       "type": "string",
       "description": "Path to an icon image relative to the repo root (e.g. \"icon.png\", \"icon.svg\") or an absolute https URL. Optional — falls back to the name's first letter on a gradient tile."
     },
+    "accent": {
+      "type": "object",
+      "description": "Brand gradient as two hex colors. Optional — falls back to a neutral gradient.",
+      "additionalProperties": false,
+      "required": ["from", "to"],
+      "properties": {
+        "from": { "type": "string", "description": "Start color, e.g. \"#fbbf24\"" },
+        "to": { "type": "string", "description": "End color, e.g. \"#f97316\"" }
+      }
+    },
     "platform": { "$ref": "#/$defs/localized" },
     "tagline": { "$ref": "#/$defs/localized" },
     "description": { "$ref": "#/$defs/localized" },

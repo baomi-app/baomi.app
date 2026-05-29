@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { AppIcon } from "@/components/AppIcon";
 import { RepoStats } from "@/components/RepoStats";
+import { accentGradient } from "@/data/apps";
 import type { AppView } from "@/data/github";
 import { ui, useLocale } from "@/i18n";
 
@@ -17,7 +18,8 @@ export function AppCard({ app }: { app: AppView }) {
       {/* accent glow */}
       <div
         aria-hidden
-        className={`pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gradient-to-br ${app.accent} opacity-10 blur-3xl transition-opacity group-hover:opacity-20`}
+        style={{ backgroundImage: accentGradient(content.accent) }}
+        className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full opacity-10 blur-3xl transition-opacity group-hover:opacity-20"
       />
 
       <div className="flex items-start justify-between gap-4">

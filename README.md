@@ -19,10 +19,10 @@ So adding or updating an app does **not** require changing this website's code (
 1. **Drop a `baomi.json` in the app's repo** (root of the default branch). See the spec below.
 2. **Register it** in [`src/data/apps.ts`](src/data/apps.ts):
    ```ts
-   { id: "myapp", repo: "owner/myapp", accent: "from-emerald-400 to-teal-500" }
+   { id: "myapp", repo: "owner/myapp" }
    ```
    - `id` is the URL slug → the detail page is `/myapp`.
-   - `accent` is any Tailwind gradient pair.
+   - That's the whole registration — everything visual/textual comes from the repo's `baomi.json`.
 
 The home-page card and the `/<id>` detail page are generated automatically. The app count on the home page is just how many apps are registered.
 
@@ -37,6 +37,7 @@ Full JSON Schema: [`baomi.schema.json`](baomi.schema.json). All user-facing text
 | `name` | string | Brand name (not localized) |
 | `status` | `"released"` \| `"beta"` \| `"wip"` | Shown as a badge; label is localized by the site |
 | `icon` | string (optional) | Repo-relative path (`"icon.png"`, `"icon.svg"`) or an absolute URL. Falls back to the name's first letter |
+| `accent` | `{ from, to }` (optional) | Brand gradient as two hex colors, e.g. `{ "from": "#fbbf24", "to": "#f97316" }`. Falls back to a neutral gradient |
 | `platform` | `{ en, zh }` | e.g. `{ "en": "macOS", "zh": "macOS" }` |
 | `tagline` | `{ en, zh }` | One line, shown on the card and detail header |
 | `description` | `{ en, zh }` | A short paragraph on the detail page |
@@ -51,6 +52,7 @@ Example:
   "name": "Pop",
   "status": "released",
   "icon": "icon.png",
+  "accent": { "from": "#fbbf24", "to": "#f97316" },
   "platform": { "en": "macOS", "zh": "macOS" },
   "tagline": { "en": "A macOS screenshot tool.", "zh": "macOS 截图工具。" },
   "description": { "en": "…", "zh": "…" },

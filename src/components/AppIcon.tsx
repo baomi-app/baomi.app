@@ -1,3 +1,4 @@
+import { accentGradient } from "@/data/apps";
 import type { AppView } from "@/data/github";
 
 /** Renders the app's own icon (hosted in its repo), or a lettered fallback. */
@@ -22,7 +23,8 @@ export function AppIcon({
 
   return (
     <span
-      className={`grid place-items-center rounded-2xl bg-gradient-to-br ${app.accent} font-semibold text-black shadow-lg ${className}`}
+      style={{ backgroundImage: accentGradient(app.content.accent) }}
+      className={`grid place-items-center rounded-2xl font-semibold text-black shadow-lg ${className}`}
     >
       {app.content.name.charAt(0)}
     </span>
