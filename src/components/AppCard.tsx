@@ -2,11 +2,17 @@
 
 import Link from "next/link";
 import { AppIcon } from "@/components/AppIcon";
+import { RepoStats } from "@/components/RepoStats";
 import type { App } from "@/data/apps";
+import type { RepoMeta } from "@/data/github";
 import { ui, useLocale } from "@/i18n";
 
-export function AppCard({ app }: { app: App }) {
-  const { t } = useLocale();
+export function AppCard({ app, meta }: { app: App; meta?: RepoMeta }) {
+  const { locale, t } = useLocale();
+  const tagline =
+    meta?.description && locale === app.repoLocale
+      ? meta.description
+      : t(app.tagline);
   return (
     <Link
       href={`/${app.id}`}
@@ -31,10 +37,12 @@ export function AppCard({ app }: { app: App }) {
       </div>
 
       <h3 className="mt-6 text-2xl font-semibold tracking-tight">{app.name}</h3>
-      <p className="mt-2 text-white/70">{t(app.tagline)}</p>
+      <p className="mt-2 text-white/70">{tagline}</p>
       {app.slogan && (
         <p className="mt-1 font-mono text-sm text-white/40">{app.slogan}</p>
       )}
+
+      <RepoStats meta={meta} className="mt-4" />
 
       <div className="mt-6 flex flex-wrap gap-1.5">
         {app.tech.map((tech) => (

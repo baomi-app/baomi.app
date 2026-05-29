@@ -2,12 +2,18 @@
 
 import Link from "next/link";
 import { AppIcon } from "@/components/AppIcon";
+import { RepoStats } from "@/components/RepoStats";
 import type { App } from "@/data/apps";
+import type { RepoMeta } from "@/data/github";
 import { ui, useLocale } from "@/i18n";
 
-export function AppDetail({ app }: { app: App }) {
+export function AppDetail({ app, meta }: { app: App; meta?: RepoMeta }) {
   const { locale, t } = useLocale();
   const features = app.features[locale];
+  const tagline =
+    meta?.description && locale === app.repoLocale
+      ? meta.description
+      : t(app.tagline);
 
   return (
     <section className="relative overflow-hidden">
@@ -42,12 +48,11 @@ export function AppDetail({ app }: { app: App }) {
                 {t(ui.status[app.status])}
               </span>
             </div>
+            <RepoStats meta={meta} className="mt-3" />
           </div>
         </div>
 
-        <p className="mt-8 text-xl leading-relaxed text-white/80">
-          {t(app.tagline)}
-        </p>
+        <p className="mt-8 text-xl leading-relaxed text-white/80">{tagline}</p>
         {app.slogan && (
           <p className="mt-1 font-mono text-white/40">{app.slogan}</p>
         )}

@@ -3,7 +3,7 @@
 // automatically. Optionally drop an icon PNG in /public and set `image`; without
 // one, the app's first letter is shown on a gradient tile.
 
-import type { L } from "@/i18n";
+import type { L, Locale } from "@/i18n";
 
 export type AppLink = {
   label: L;
@@ -21,6 +21,10 @@ export type App = {
   tech: string[];
   platform: L;
   status: "released" | "beta" | "wip";
+  /** "owner/name" on GitHub — used to pull live stars / version / updated time. */
+  repo: string;
+  /** Language of the repo's GitHub description, so it slots into the right locale. */
+  repoLocale: Locale;
   accent: string; // tailwind gradient classes "from-... to-..."
   /** Path to the app's own icon image; falls back to a drawn icon if absent. */
   image?: string;
@@ -60,6 +64,8 @@ export const apps: App[] = [
     tech: ["Swift", "AppKit"],
     platform: { en: "macOS", zh: "macOS" },
     status: "released",
+    repo: "baomi-app/pop",
+    repoLocale: "zh",
     accent: "from-amber-400 to-orange-500",
     image: "/pop.png",
     links: [
@@ -102,6 +108,8 @@ export const apps: App[] = [
     tech: ["Next.js 16", "TypeScript", "Tailwind CSS", "Upstash Redis"],
     platform: { en: "Web", zh: "网页" },
     status: "released",
+    repo: "people-s-organization/people-s-rss",
+    repoLocale: "en",
     accent: "from-sky-400 to-indigo-500",
     website: "https://rss.baomi.app",
     links: [

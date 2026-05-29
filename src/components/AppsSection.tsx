@@ -2,9 +2,14 @@
 
 import { AppCard } from "@/components/AppCard";
 import { apps } from "@/data/apps";
+import type { RepoMeta } from "@/data/github";
 import { ui, useLocale } from "@/i18n";
 
-export function AppsSection() {
+export function AppsSection({
+  meta = {},
+}: {
+  meta?: Record<string, RepoMeta>;
+}) {
   const { t } = useLocale();
   return (
     <section id="apps" className="mx-auto max-w-5xl px-6 pb-28">
@@ -22,7 +27,7 @@ export function AppsSection() {
 
       <div className="mt-10 grid gap-6 md:grid-cols-2">
         {apps.map((app) => (
-          <AppCard key={app.id} app={app} />
+          <AppCard key={app.id} app={app} meta={meta[app.repo]} />
         ))}
       </div>
     </section>
