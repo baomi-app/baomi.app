@@ -64,8 +64,10 @@ export const apps: App[] = [
     image: "/pop.png",
     links: [
       {
+        // Stable "latest release" URL — always serves the newest Pop.zip, so it
+        // does not change between versions (as long as the asset stays Pop.zip).
         label: { en: "Download", zh: "下载" },
-        href: "https://github.com/baomi-app/pop/releases",
+        href: "https://github.com/baomi-app/pop/releases/latest/download/Pop.zip",
       },
       { label: { en: "GitHub", zh: "GitHub" }, href: "https://github.com/baomi-app/pop" },
     ],
