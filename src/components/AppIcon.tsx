@@ -1,19 +1,19 @@
 import Image from "next/image";
-import type { App } from "@/data/apps";
+import type { AppView } from "@/data/github";
 
 /** Renders an app's own icon image, or a drawn fallback icon. */
 export function AppIcon({
   app,
   className = "",
 }: {
-  app: App;
+  app: AppView;
   className?: string;
 }) {
   if (app.image) {
     return (
       <Image
         src={app.image}
-        alt={`${app.name} icon`}
+        alt={`${app.content.name} icon`}
         width={160}
         height={160}
         className={`rounded-2xl shadow-lg ${className}`}
@@ -25,7 +25,7 @@ export function AppIcon({
     <span
       className={`grid place-items-center rounded-2xl bg-gradient-to-br ${app.accent} font-semibold text-black shadow-lg ${className}`}
     >
-      {app.id === "rss" ? <RssGlyph /> : app.name.charAt(0)}
+      {app.id === "rss" ? <RssGlyph /> : app.content.name.charAt(0)}
     </span>
   );
 }

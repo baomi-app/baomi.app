@@ -27,7 +27,9 @@ export const ui = {
   },
   hero: {
     badge: { en: "Independent apps, built with care", zh: "独立开发，用心打磨" },
-    titleLead: { en: "Small, sharp apps that", zh: "小而精的应用，" },
+    // EN keeps a trailing space before the gradient accent; ZH has none (no
+    // space after a full-width comma). The Hero joins them without inserting one.
+    titleLead: { en: "Small, sharp apps that ", zh: "小而精的应用，" },
     titleAccent: { en: "do one thing well.", zh: "只把一件事做好。" },
     subtitle: {
       en: "Small tools by baomi — fast, focused, and a pleasure to use.",

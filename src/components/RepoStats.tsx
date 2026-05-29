@@ -13,7 +13,7 @@ export function RepoStats({
   meta,
   className = "",
 }: {
-  meta?: RepoMeta;
+  meta?: RepoMeta | null;
   className?: string;
 }) {
   const { t } = useLocale();

@@ -21,7 +21,7 @@ export function Hero() {
         </span>
 
         <h1 className="animate-pop-in mt-6 max-w-3xl text-balance text-5xl font-bold leading-[1.05] tracking-tight sm:text-7xl">
-          {t(ui.hero.titleLead)}{" "}
+          {t(ui.hero.titleLead)}
           <span className="bg-gradient-to-r from-amber-300 via-orange-400 to-rose-400 bg-clip-text text-transparent">
             {t(ui.hero.titleAccent)}
           </span>

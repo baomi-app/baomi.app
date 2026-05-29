@@ -1,46 +1,71 @@
-// To add a new app, append an entry to the `apps` array below — that's the only
-// file you need to touch. The home card and its /<id> detail page are generated
-// automatically. Optionally drop an icon PNG in /public and set `image`; without
-// one, the app's first letter is shown on a gradient tile.
-
-import type { L, Locale } from "@/i18n";
+import type { L } from "@/i18n";
 
 export type AppLink = {
   label: L;
   href: string;
 };
 
-export type App = {
-  id: string;
+/**
+ * The bilingual content for one app. This is the source of truth maintained in
+ * the app's OWN repo, as `baomi.json` on its default branch. The website fetches
+ * it at build / revalidation time — see src/data/github.ts.
+ */
+export type AppContent = {
   name: string;
+  status: "released" | "beta" | "wip";
+  platform: L;
   tagline: L;
-  /** A short brand slogan shown verbatim regardless of locale, if any. */
-  slogan?: string;
   description: L;
   features: { en: string[]; zh: string[] };
   tech: string[];
-  platform: L;
-  status: "released" | "beta" | "wip";
-  /** "owner/name" on GitHub — used to pull live stars / version / updated time. */
-  repo: string;
-  /** Language of the repo's GitHub description, so it slots into the right locale. */
-  repoLocale: Locale;
-  accent: string; // tailwind gradient classes "from-... to-..."
-  /** Path to the app's own icon image; falls back to a drawn icon if absent. */
-  image?: string;
-  website?: string; // the live app, if it has one
   links: AppLink[];
 };
 
-export const apps: App[] = [
+/**
+ * Site-side registration + presentation for one app. To add a new app, append
+ * one entry here and drop a `baomi.json` in its repo — the card and /<id> page
+ * are generated automatically.
+ */
+export type AppConfig = {
+  id: string; // URL slug, e.g. "pop"
+  repo: string; // "owner/name" on GitHub
+  accent: string; // tailwind gradient classes "from-... to-..."
+  image?: string; // icon in /public; falls back to the name's initial
+  branch?: string; // default "main"
+  contentFile?: string; // default "baomi.json"
+};
+
+export const apps: AppConfig[] = [
   {
     id: "pop",
+    repo: "baomi-app/pop",
+    accent: "from-amber-400 to-orange-500",
+    image: "/pop.png",
+  },
+  {
+    id: "rss",
+    repo: "people-s-organization/people-s-rss",
+    accent: "from-sky-400 to-indigo-500",
+  },
+];
+
+export function getConfig(id: string): AppConfig | undefined {
+  return apps.find((app) => app.id === id);
+}
+
+/**
+ * Bundled fallback content — used ONLY if an app's `baomi.json` can't be fetched,
+ * so the site still renders. The repo file is authoritative when present.
+ */
+export const fallbackContent: Record<string, AppContent> = {
+  pop: {
     name: "Pop",
+    status: "released",
+    platform: { en: "macOS", zh: "macOS" },
     tagline: {
-      en: "A macOS screenshot tool. Click, instant capture.",
-      zh: "macOS 截图工具。一键，即拍即得。",
+      en: "A macOS screenshot tool — click, instant capture.",
+      zh: "macOS 截图工具。咔，一爆即得。",
     },
-    slogan: "咔，一爆即得。",
     description: {
       en: "A lightweight, fast screenshot utility for macOS. Hit a hotkey, pick a window or region, and the shot is on your clipboard before you blink.",
       zh: "轻量、快速的 macOS 截图工具。按下快捷键，框选窗口或区域，截图瞬间就到了你的剪贴板里。",
@@ -62,25 +87,18 @@ export const apps: App[] = [
       ],
     },
     tech: ["Swift", "AppKit"],
-    platform: { en: "macOS", zh: "macOS" },
-    status: "released",
-    repo: "baomi-app/pop",
-    repoLocale: "zh",
-    accent: "from-amber-400 to-orange-500",
-    image: "/pop.png",
     links: [
       {
-        // Stable "latest release" URL — always serves the newest Pop.zip, so it
-        // does not change between versions (as long as the asset stays Pop.zip).
         label: { en: "Download", zh: "下载" },
         href: "https://github.com/baomi-app/pop/releases/latest/download/Pop.zip",
       },
       { label: { en: "GitHub", zh: "GitHub" }, href: "https://github.com/baomi-app/pop" },
     ],
   },
-  {
-    id: "rss",
+  rss: {
     name: "People's RSS",
+    status: "released",
+    platform: { en: "Web", zh: "网页" },
     tagline: {
       en: "A minimal RSS / Atom reader on Vercel, with bring-your-own-key AI summaries.",
       zh: "运行在 Vercel 上的极简 RSS / Atom 阅读器，用你自己的 Key 生成 AI 摘要。",
@@ -106,12 +124,6 @@ export const apps: App[] = [
       ],
     },
     tech: ["Next.js 16", "TypeScript", "Tailwind CSS", "Upstash Redis"],
-    platform: { en: "Web", zh: "网页" },
-    status: "released",
-    repo: "people-s-organization/people-s-rss",
-    repoLocale: "en",
-    accent: "from-sky-400 to-indigo-500",
-    website: "https://rss.baomi.app",
     links: [
       { label: { en: "Open app", zh: "打开应用" }, href: "https://rss.baomi.app" },
       {
@@ -120,8 +132,4 @@ export const apps: App[] = [
       },
     ],
   },
-];
-
-export function getApp(id: string): App | undefined {
-  return apps.find((app) => app.id === id);
-}
+};

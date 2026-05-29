@@ -1,19 +1,29 @@
-// Live repo metadata pulled from the GitHub REST API. Called only from Server
-// Components; results are cached and refreshed on an interval (ISR) so the site
-// stays up to date without a redeploy. Set GITHUB_TOKEN in the environment to
-// lift the unauthenticated rate limit (optional — traffic here is tiny).
+// Live data pulled from GitHub, called only from Server Components and cached
+// on an interval (ISR) so the site stays current without a redeploy.
+//   - Repo stats (stars / version / updated) come from the REST API. Set
+//     GITHUB_TOKEN to lift the unauthenticated rate limit.
+//   - Each app's bilingual content comes from `baomi.json` in its own repo,
+//     fetched from raw.githubusercontent.com (CDN, no rate limit / token).
+
+import {
+  apps,
+  fallbackContent,
+  type AppConfig,
+  type AppContent,
+} from "@/data/apps";
+
+const REVALIDATE_SECONDS = 3600; // refresh at most once per hour
 
 export type RepoMeta = {
   stars: number;
-  /** Latest release tag (e.g. "v0.1.0"), or null if the repo has no releases. */
-  version: string | null;
-  /** ISO timestamp: latest release date, falling back to last push. */
-  updatedAt: string;
-  /** The repo's GitHub description (single language), or null. */
-  description: string | null;
+  version: string | null; // latest release tag, or null if no releases
+  updatedAt: string; // ISO: latest release date, else last push
 };
 
-const REVALIDATE_SECONDS = 3600; // refresh at most once per hour
+export type AppView = AppConfig & {
+  content: AppContent;
+  meta: RepoMeta | null;
+};
 
 function ghHeaders(): HeadersInit {
   const headers: Record<string, string> = {
@@ -50,19 +60,34 @@ export async function getRepoMeta(repo: string): Promise<RepoMeta | null> {
     version: (release?.tag_name as string) ?? null,
     updatedAt:
       (release?.published_at as string) ?? (info.pushed_at as string) ?? "",
-    description: (info.description as string) ?? null,
   };
 }
 
-export async function getAllRepoMeta(
-  repos: string[]
-): Promise<Record<string, RepoMeta>> {
-  const entries = await Promise.all(
-    repos.map(async (repo) => [repo, await getRepoMeta(repo)] as const)
-  );
-  const result: Record<string, RepoMeta> = {};
-  for (const [repo, meta] of entries) {
-    if (meta) result[repo] = meta;
+export async function getAppContent(config: AppConfig): Promise<AppContent> {
+  const branch = config.branch ?? "main";
+  const file = config.contentFile ?? "baomi.json";
+  try {
+    const res = await fetch(
+      `https://raw.githubusercontent.com/${config.repo}/${branch}/${file}`,
+      { next: { revalidate: REVALIDATE_SECONDS } }
+    );
+    if (res.ok) {
+      return (await res.json()) as AppContent;
+    }
+  } catch {
+    // fall through to bundled content
   }
-  return result;
+  return fallbackContent[config.id];
+}
+
+export async function getAppView(config: AppConfig): Promise<AppView> {
+  const [content, meta] = await Promise.all([
+    getAppContent(config),
+    getRepoMeta(config.repo),
+  ]);
+  return { ...config, content, meta };
+}
+
+export async function getAllAppViews(): Promise<AppView[]> {
+  return Promise.all(apps.map(getAppView));
 }

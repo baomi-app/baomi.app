@@ -3,17 +3,13 @@
 import Link from "next/link";
 import { AppIcon } from "@/components/AppIcon";
 import { RepoStats } from "@/components/RepoStats";
-import type { App } from "@/data/apps";
-import type { RepoMeta } from "@/data/github";
+import type { AppView } from "@/data/github";
 import { ui, useLocale } from "@/i18n";
 
-export function AppDetail({ app, meta }: { app: App; meta?: RepoMeta }) {
+export function AppDetail({ app }: { app: AppView }) {
   const { locale, t } = useLocale();
-  const features = app.features[locale];
-  const tagline =
-    meta?.description && locale === app.repoLocale
-      ? meta.description
-      : t(app.tagline);
+  const { content } = app;
+  const features = content.features[locale];
 
   return (
     <section className="relative overflow-hidden">
@@ -38,29 +34,28 @@ export function AppDetail({ app, meta }: { app: App; meta?: RepoMeta }) {
           <AppIcon app={app} className="h-20 w-20 shrink-0 text-4xl" />
           <div>
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-              {app.name}
+              {content.name}
             </h1>
             <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
               <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-white/60">
-                {t(app.platform)}
+                {t(content.platform)}
               </span>
               <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-emerald-300">
-                {t(ui.status[app.status])}
+                {t(ui.status[content.status])}
               </span>
             </div>
-            <RepoStats meta={meta} className="mt-3" />
+            <RepoStats meta={app.meta} className="mt-3" />
           </div>
         </div>
 
-        <p className="mt-8 text-xl leading-relaxed text-white/80">{tagline}</p>
-        {app.slogan && (
-          <p className="mt-1 font-mono text-white/40">{app.slogan}</p>
-        )}
+        <p className="mt-8 text-xl leading-relaxed text-white/80">
+          {t(content.tagline)}
+        </p>
 
-        <p className="mt-6 text-white/60">{t(app.description)}</p>
+        <p className="mt-6 text-white/60">{t(content.description)}</p>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          {app.links.map((link, i) => (
+          {content.links.map((link, i) => (
             <a
               key={link.href}
               href={link.href}
@@ -98,7 +93,7 @@ export function AppDetail({ app, meta }: { app: App; meta?: RepoMeta }) {
             {t(ui.detail.builtWith)}
           </h2>
           <div className="mt-4 flex flex-wrap gap-2">
-            {app.tech.map((tech) => (
+            {content.tech.map((tech) => (
               <span
                 key={tech}
                 className="rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1 font-mono text-sm text-white/50"

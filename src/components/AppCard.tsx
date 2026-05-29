@@ -3,16 +3,12 @@
 import Link from "next/link";
 import { AppIcon } from "@/components/AppIcon";
 import { RepoStats } from "@/components/RepoStats";
-import type { App } from "@/data/apps";
-import type { RepoMeta } from "@/data/github";
+import type { AppView } from "@/data/github";
 import { ui, useLocale } from "@/i18n";
 
-export function AppCard({ app, meta }: { app: App; meta?: RepoMeta }) {
-  const { locale, t } = useLocale();
-  const tagline =
-    meta?.description && locale === app.repoLocale
-      ? meta.description
-      : t(app.tagline);
+export function AppCard({ app }: { app: AppView }) {
+  const { t } = useLocale();
+  const { content } = app;
   return (
     <Link
       href={`/${app.id}`}
@@ -28,24 +24,23 @@ export function AppCard({ app, meta }: { app: App; meta?: RepoMeta }) {
         <AppIcon app={app} className="h-14 w-14" />
         <div className="flex items-center gap-2 text-xs">
           <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-white/60">
-            {t(app.platform)}
+            {t(content.platform)}
           </span>
           <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-emerald-300">
-            {t(ui.status[app.status])}
+            {t(ui.status[content.status])}
           </span>
         </div>
       </div>
 
-      <h3 className="mt-6 text-2xl font-semibold tracking-tight">{app.name}</h3>
-      <p className="mt-2 text-white/70">{tagline}</p>
-      {app.slogan && (
-        <p className="mt-1 font-mono text-sm text-white/40">{app.slogan}</p>
-      )}
+      <h3 className="mt-6 text-2xl font-semibold tracking-tight">
+        {content.name}
+      </h3>
+      <p className="mt-2 text-white/70">{t(content.tagline)}</p>
 
-      <RepoStats meta={meta} className="mt-4" />
+      <RepoStats meta={app.meta} className="mt-4" />
 
       <div className="mt-6 flex flex-wrap gap-1.5">
-        {app.tech.map((tech) => (
+        {content.tech.map((tech) => (
           <span
             key={tech}
             className="rounded-md border border-white/10 bg-white/[0.04] px-2 py-0.5 font-mono text-xs text-white/50"
