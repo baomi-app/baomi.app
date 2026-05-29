@@ -19,7 +19,8 @@ const STORAGE_KEY = "baomi.locale";
 /** UI string dictionary. Each entry is localized. */
 export const ui = {
   brand: {
-    slogan: { en: "Click. Done.", zh: "咔，一爆即得。" },
+    // baomi's own studio tagline. (Pop's "咔，一爆即得" slogan lives on Pop.)
+    tagline: { en: "Small, sharp apps", zh: "小而精，只做好一件事" },
   },
   nav: {
     apps: { en: "Apps", zh: "应用" },

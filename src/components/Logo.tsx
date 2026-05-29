@@ -12,7 +12,7 @@ export function Logo({
       {showWordmark && (
         <span className="text-lg font-semibold tracking-tight">
           baomi
-          <span className="text-orange-400">.</span>
+          <span className="text-orange-400">.app</span>
         </span>
       )}
     </span>
