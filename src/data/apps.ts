@@ -15,6 +15,7 @@ export type App = {
   status: "released" | "beta" | "wip";
   accent: string; // tailwind gradient classes "from-... to-..."
   glyph: string; // emoji / short symbol used as a fallback icon
+  website?: string; // the live app, if it has one
   links: AppLink[];
 };
 
@@ -39,11 +40,11 @@ export const apps: App[] = [
     accent: "from-amber-400 to-orange-500",
     glyph: "✂",
     links: [
-      { label: "GitHub", href: "https://github.com/baomi-app/pop" },
       {
         label: "Download",
         href: "https://github.com/baomi-app/pop/releases",
       },
+      { label: "GitHub", href: "https://github.com/baomi-app/pop" },
     ],
   },
   {
@@ -61,11 +62,13 @@ export const apps: App[] = [
       "Built-in image proxy, SSRF protection & rate limiting",
     ],
     tech: ["Next.js 16", "TypeScript", "Tailwind CSS", "Upstash Redis"],
-    platform: "Web · Vercel",
+    platform: "Web",
     status: "released",
     accent: "from-sky-400 to-indigo-500",
     glyph: "❡",
+    website: "https://rss.baomi.app",
     links: [
+      { label: "Open app", href: "https://rss.baomi.app" },
       {
         label: "GitHub",
         href: "https://github.com/people-s-organization/people-s-rss",
@@ -73,3 +76,7 @@ export const apps: App[] = [
     ],
   },
 ];
+
+export function getApp(id: string): App | undefined {
+  return apps.find((app) => app.id === id);
+}

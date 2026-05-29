@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { App } from "@/data/apps";
 
 const statusLabel: Record<App["status"], string> = {
@@ -8,7 +9,10 @@ const statusLabel: Record<App["status"], string> = {
 
 export function AppCard({ app }: { app: App }) {
   return (
-    <article className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-8 transition-colors hover:border-white/20">
+    <Link
+      href={`/${app.id}`}
+      className="group relative flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-8 transition-colors hover:border-white/20"
+    >
       {/* accent glow */}
       <div
         aria-hidden
@@ -37,24 +41,6 @@ export function AppCard({ app }: { app: App }) {
         <p className="mt-1 font-mono text-sm text-white/40">{app.taglineZh}</p>
       )}
 
-      <p className="mt-4 text-sm leading-relaxed text-white/55">
-        {app.description}
-      </p>
-
-      <ul className="mt-6 space-y-2">
-        {app.features.map((feature) => (
-          <li
-            key={feature}
-            className="flex items-start gap-2.5 text-sm text-white/65"
-          >
-            <span
-              className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gradient-to-br ${app.accent}`}
-            />
-            {feature}
-          </li>
-        ))}
-      </ul>
-
       <div className="mt-6 flex flex-wrap gap-1.5">
         {app.tech.map((t) => (
           <span
@@ -66,23 +52,12 @@ export function AppCard({ app }: { app: App }) {
         ))}
       </div>
 
-      <div className="mt-8 flex flex-wrap gap-3">
-        {app.links.map((link, i) => (
-          <a
-            key={link.href}
-            href={link.href}
-            target="_blank"
-            rel="noreferrer"
-            className={
-              i === 0
-                ? "rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition-transform hover:scale-[1.03]"
-                : "rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-white/80 transition-colors hover:bg-white/5 hover:text-white"
-            }
-          >
-            {link.label}
-          </a>
-        ))}
-      </div>
-    </article>
+      <span className="mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-white/80 transition-colors group-hover:text-white">
+        View details
+        <span className="transition-transform group-hover:translate-x-0.5">
+          →
+        </span>
+      </span>
+    </Link>
   );
 }
