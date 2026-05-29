@@ -1,3 +1,8 @@
+// To add a new app, append an entry to the `apps` array below — that's the only
+// file you need to touch. The home card and its /<id> detail page are generated
+// automatically. Optionally drop an icon PNG in /public and set `image`; without
+// one, the app's first letter is shown on a gradient tile.
+
 import type { L } from "@/i18n";
 
 export type AppLink = {

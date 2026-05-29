@@ -18,6 +18,9 @@ const STORAGE_KEY = "baomi.locale";
 
 /** UI string dictionary. Each entry is localized. */
 export const ui = {
+  brand: {
+    slogan: { en: "Click. Done.", zh: "咔，一爆即得。" },
+  },
   nav: {
     apps: { en: "Apps", zh: "应用" },
   },

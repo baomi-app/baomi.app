@@ -29,7 +29,7 @@ export function Hero() {
 
         <p className="animate-pop-in mt-6 max-w-xl text-lg leading-relaxed text-white/60">
           {t(ui.hero.subtitle)}{" "}
-          <span className="text-white/80">咔，一爆即得。</span>
+          <span className="text-white/80">{t(ui.brand.slogan)}</span>
         </p>
 
         <div className="animate-pop-in mt-9 flex flex-wrap items-center gap-3">

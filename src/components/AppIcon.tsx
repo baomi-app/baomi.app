@@ -23,9 +23,9 @@ export function AppIcon({
 
   return (
     <span
-      className={`grid place-items-center rounded-2xl bg-gradient-to-br ${app.accent} text-black shadow-lg ${className}`}
+      className={`grid place-items-center rounded-2xl bg-gradient-to-br ${app.accent} font-semibold text-black shadow-lg ${className}`}
     >
-      {app.id === "rss" ? <RssGlyph /> : null}
+      {app.id === "rss" ? <RssGlyph /> : app.name.charAt(0)}
     </span>
   );
 }
