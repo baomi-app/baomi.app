@@ -1,5 +1,7 @@
 # baomi.app
 
+English · [中文](README.zh.md)
+
 The website for **baomi** — small, sharp apps that do one thing well. Live at **[baomi.app](https://baomi.app)**.
 
 Built with Next.js 16 + Tailwind, deployed on Vercel. Bilingual (EN / 中文).
@@ -8,7 +10,7 @@ Built with Next.js 16 + Tailwind, deployed on Vercel. Bilingual (EN / 中文).
 
 Each app shown on the site is split into two parts:
 
-- **Registration + presentation** lives here, in [`src/data/apps.ts`](src/data/apps.ts): just the URL slug, the GitHub repo, and an accent color.
+- **Registration** lives here, in [`src/data/apps.ts`](src/data/apps.ts): just the URL slug and the GitHub repo.
 - **Content** (all the bilingual text + the icon) lives in the **app's own repo**, in a `baomi.json` file on its default branch. The site fetches it from `raw.githubusercontent.com` and refreshes hourly (ISR) — so editing `baomi.json` updates the site without touching this repo or redeploying.
 - **Live stats** (latest version, star count, last-updated date) are pulled from the GitHub API, also hourly.
 
