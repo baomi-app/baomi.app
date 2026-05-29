@@ -36,32 +36,9 @@ export default function OpengraphImage() {
         />
 
         {/* brand */}
-        <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-          <div
-            style={{
-              width: 96,
-              height: 96,
-              borderRadius: 28,
-              background: "linear-gradient(135deg, #fbbf24, #f97316)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <svg width="62" height="62" viewBox="0 0 32 32">
-              <rect x="8.8" y="5.5" width="3.6" height="21" rx="1.8" fill="#1a1205" />
-              <circle
-                cx="16.4"
-                cy="19.7"
-                r="6.4"
-                fill="none"
-                stroke="#1a1205"
-                strokeWidth="3.6"
-              />
-            </svg>
-          </div>
-          <div style={{ display: "flex", fontSize: 56, fontWeight: 700, color: "#fff" }}>
-            baomi<span style={{ color: "#fb923c" }}>.</span>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div style={{ display: "flex", fontSize: 64, fontWeight: 700, color: "#fff" }}>
+            baomi<span style={{ color: "#fb923c" }}>.app</span>
           </div>
         </div>
 
