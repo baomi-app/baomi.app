@@ -30,8 +30,8 @@ export const ui = {
     titleLead: { en: "Small, sharp apps that", zh: "小而精的应用，" },
     titleAccent: { en: "do one thing well.", zh: "只把一件事做好。" },
     subtitle: {
-      en: "baomi is a tiny studio building focused, fast tools — from instant screenshots to a privacy-first feed reader.",
-      zh: "baomi 是一个小小的工作室，专做轻快、专注的小工具——从即时截图到隐私优先的阅读器。",
+      en: "baomi is a tiny studio crafting fast, focused tools — light to use and easy to love.",
+      zh: "baomi 是一个小小的工作室，专注打磨轻快、好用的小工具——用起来轻盈，越用越顺手。",
     },
     ctaExplore: { en: "Explore the apps", zh: "看看应用" },
     ctaGithub: { en: "View on GitHub", zh: "在 GitHub 查看" },
