@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { ui, useLocale } from "@/i18n";
 
 export function Hero() {
@@ -32,12 +31,12 @@ export function Hero() {
         </p>
 
         <div className="animate-pop-in mt-9 flex flex-wrap items-center gap-3">
-          <Link
+          <a
             href="#apps"
             className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black transition-transform hover:scale-[1.03]"
           >
             {t(ui.hero.ctaExplore)}
-          </Link>
+          </a>
           <a
             href="https://github.com/baomi-app"
             target="_blank"

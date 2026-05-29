@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { accentGradient } from "@/data/apps";
 import type { AppView } from "@/data/github";
 
@@ -9,13 +12,16 @@ export function AppIcon({
   app: AppView;
   className?: string;
 }) {
-  if (app.iconUrl) {
+  const [errored, setErrored] = useState(false);
+
+  if (app.iconUrl && !errored) {
     // eslint-disable-next-line @next/next/no-img-element
     return (
       <img
         src={app.iconUrl}
         alt={`${app.content.name} icon`}
         loading="lazy"
+        onError={() => setErrored(true)}
         className={`rounded-2xl object-cover shadow-lg ${className}`}
       />
     );

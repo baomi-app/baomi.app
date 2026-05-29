@@ -14,12 +14,12 @@ export function Nav() {
           <Logo />
         </Link>
         <div className="flex items-center gap-4 text-sm text-white/60 sm:gap-6">
-          <Link
+          <a
             href="/#apps"
             className="hidden transition-colors hover:text-white sm:inline"
           >
             {t(ui.nav.apps)}
-          </Link>
+          </a>
           <a
             href="https://github.com/baomi-app"
             target="_blank"
