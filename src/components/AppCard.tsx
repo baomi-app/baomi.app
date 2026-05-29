@@ -1,13 +1,12 @@
-import Link from "next/link";
-import type { App } from "@/data/apps";
+"use client";
 
-const statusLabel: Record<App["status"], string> = {
-  released: "Released",
-  beta: "Beta",
-  wip: "In progress",
-};
+import Link from "next/link";
+import { AppIcon } from "@/components/AppIcon";
+import type { App } from "@/data/apps";
+import { ui, useLocale } from "@/i18n";
 
 export function AppCard({ app }: { app: App }) {
+  const { t } = useLocale();
   return (
     <Link
       href={`/${app.id}`}
@@ -20,40 +19,36 @@ export function AppCard({ app }: { app: App }) {
       />
 
       <div className="flex items-start justify-between gap-4">
-        <div
-          className={`grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br ${app.accent} text-2xl text-black shadow-lg`}
-        >
-          {app.glyph}
-        </div>
+        <AppIcon app={app} className="h-14 w-14" />
         <div className="flex items-center gap-2 text-xs">
           <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-white/60">
-            {app.platform}
+            {t(app.platform)}
           </span>
           <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-emerald-300">
-            {statusLabel[app.status]}
+            {t(ui.status[app.status])}
           </span>
         </div>
       </div>
 
       <h3 className="mt-6 text-2xl font-semibold tracking-tight">{app.name}</h3>
-      <p className="mt-2 text-white/70">{app.tagline}</p>
-      {app.taglineZh && (
-        <p className="mt-1 font-mono text-sm text-white/40">{app.taglineZh}</p>
+      <p className="mt-2 text-white/70">{t(app.tagline)}</p>
+      {app.slogan && (
+        <p className="mt-1 font-mono text-sm text-white/40">{app.slogan}</p>
       )}
 
       <div className="mt-6 flex flex-wrap gap-1.5">
-        {app.tech.map((t) => (
+        {app.tech.map((tech) => (
           <span
-            key={t}
+            key={tech}
             className="rounded-md border border-white/10 bg-white/[0.04] px-2 py-0.5 font-mono text-xs text-white/50"
           >
-            {t}
+            {tech}
           </span>
         ))}
       </div>
 
       <span className="mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-white/80 transition-colors group-hover:text-white">
-        View details
+        {t(ui.apps.viewDetails)}
         <span className="transition-transform group-hover:translate-x-0.5">
           →
         </span>
