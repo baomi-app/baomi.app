@@ -20,7 +20,7 @@ const STORAGE_KEY = "baomi.locale";
 export const ui = {
   brand: {
     // baomi's own studio tagline. (Pop's "咔，一爆即得" slogan lives on Pop.)
-    tagline: { en: "Small, sharp, and focused.", zh: "小而精悍，专注一事" },
+    tagline: { en: "Focused on one, subtle yet extraordinary.", zh: "专注一事，微而不凡" },
   },
   nav: {
     apps: { en: "Apps", zh: "应用" },
