@@ -41,6 +41,7 @@ export type AppConfig = {
 
 export const apps: AppConfig[] = [
   { id: "pop", repo: "baomi-app/pop" },
+  { id: "open-youtube-music", repo: "baomi-app/open-youtube-music" },
   { id: "rss", repo: "people-s-organization/people-s-rss" },
 ];
 
