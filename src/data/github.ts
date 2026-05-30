@@ -57,7 +57,7 @@ async function ghGet(path: string): Promise<Record<string, unknown> | null> {
   try {
     const res = await fetch(`https://api.github.com/${path}`, {
       headers: ghHeaders(),
-      next: { revalidate: REVALIDATE_SECONDS },
+      cache: "no-store",
     });
     if (!res.ok) return null;
     return (await res.json()) as Record<string, unknown>;
@@ -88,7 +88,7 @@ export async function getAppContent(
   try {
     const res = await fetch(
       `https://raw.githubusercontent.com/${config.repo}/${branch}/${file}`,
-      { next: { revalidate: REVALIDATE_SECONDS } }
+      { cache: "no-store" }
     );
     if (res.ok) {
       return (await res.json()) as AppContent;
