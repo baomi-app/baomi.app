@@ -17,6 +17,7 @@ export type AppContent = {
   status: "released" | "beta" | "wip";
   /** Icon: a path relative to the repo root (e.g. "icon.png") or an absolute URL. */
   icon?: string;
+  screenshots?: string[];
   /** Brand gradient as two hex colors. Falls back to a neutral gradient. */
   accent?: Accent;
   platform: L;

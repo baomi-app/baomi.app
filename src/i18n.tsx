@@ -51,6 +51,7 @@ export const ui = {
     back: { en: "All apps", zh: "全部应用" },
     features: { en: "Features", zh: "功能" },
     builtWith: { en: "Built with", zh: "技术栈" },
+    screenshots: { en: "Screenshots", zh: "界面预览" },
   },
   status: {
     released: { en: "Released", zh: "已发布" },

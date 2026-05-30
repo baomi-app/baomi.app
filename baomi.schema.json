@@ -20,6 +20,11 @@
       "type": "string",
       "description": "Path to an icon image relative to the repo root (e.g. \"icon.png\", \"icon.svg\") or an absolute https URL. Optional — falls back to the name's first letter on a gradient tile."
     },
+    "screenshots": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Paths to screenshots relative to the repo root (e.g. [\"screenshots/promo_screenshot.png\"]) or absolute https URLs. Optional."
+    },
     "accent": {
       "type": "object",
       "description": "Brand gradient as two hex colors. Optional — falls back to a neutral gradient.",

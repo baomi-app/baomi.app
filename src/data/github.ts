@@ -20,6 +20,8 @@ export type AppView = AppConfig & {
   meta: RepoMeta | null;
   /** Absolute URL to the app's icon, resolved from content.icon, or null. */
   iconUrl: string | null;
+  /** Absolute URLs to the app's screenshots. */
+  screenshotUrls: string[];
 };
 
 function resolveIconUrl(config: AppConfig, content: AppContent): string | null {
@@ -28,6 +30,16 @@ function resolveIconUrl(config: AppConfig, content: AppContent): string | null {
   if (/^https?:\/\//.test(icon)) return icon;
   const branch = config.branch ?? "main";
   return `https://raw.githubusercontent.com/${config.repo}/${branch}/${icon}`;
+}
+
+function resolveScreenshotUrls(config: AppConfig, content: AppContent): string[] {
+  const screenshots = content.screenshots;
+  if (!screenshots) return [];
+  const branch = config.branch ?? "main";
+  return screenshots.map((path) => {
+    if (/^https?:\/\//.test(path)) return path;
+    return `https://raw.githubusercontent.com/${config.repo}/${branch}/${path}`;
+  });
 }
 
 function ghHeaders(): HeadersInit {
@@ -93,7 +105,13 @@ export async function getAppView(config: AppConfig): Promise<AppView | null> {
     getRepoMeta(config.repo),
   ]);
   if (!content) return null;
-  return { ...config, content, meta, iconUrl: resolveIconUrl(config, content) };
+  return {
+    ...config,
+    content,
+    meta,
+    iconUrl: resolveIconUrl(config, content),
+    screenshotUrls: resolveScreenshotUrls(config, content),
+  };
 }
 
 export async function getAllAppViews(): Promise<AppView[]> {

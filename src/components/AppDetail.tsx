@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { AppIcon } from "@/components/AppIcon";
 import { RepoStats } from "@/components/RepoStats";
@@ -11,6 +12,7 @@ export function AppDetail({ app }: { app: AppView }) {
   const { locale, t } = useLocale();
   const { content } = app;
   const features = content.features[locale];
+  const [activeScreenshot, setActiveScreenshot] = useState<string | null>(null);
 
   return (
     <section className="relative overflow-hidden">
@@ -74,6 +76,45 @@ export function AppDetail({ app }: { app: AppView }) {
           ))}
         </div>
 
+        {app.screenshotUrls && app.screenshotUrls.length > 0 && (
+          <div className="mt-14">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-white/40">
+              {t(ui.detail.screenshots)}
+            </h2>
+            <div className="mt-5 flex gap-4 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-white/10 snap-x snap-mandatory">
+              {app.screenshotUrls.map((url, idx) => (
+                <div
+                  key={url}
+                  onClick={() => setActiveScreenshot(url)}
+                  className="relative flex-none w-[280px] sm:w-[480px] aspect-[16/10] rounded-xl overflow-hidden border border-white/10 bg-white/5 shadow-2xl cursor-zoom-in snap-start group transition-all duration-300 hover:scale-[1.02] hover:border-white/20"
+                >
+                  <img
+                    src={url}
+                    alt={`${content.name} Screenshot ${idx + 1}`}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <svg
+                      className="w-8 h-8 text-white/80 filter drop-shadow-md transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="mt-14">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-white/40">
             {t(ui.detail.features)}
@@ -107,6 +148,30 @@ export function AppDetail({ app }: { app: AppView }) {
           </div>
         </div>
       </div>
+
+      {activeScreenshot && (
+        <div
+          onClick={() => setActiveScreenshot(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md transition-opacity duration-300 cursor-zoom-out animate-fade-in"
+        >
+          <div className="relative max-w-5xl max-h-[85vh] overflow-hidden rounded-2xl border border-white/10 shadow-2xl animate-scale-up" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={activeScreenshot}
+              alt="Screenshot Zoomed"
+              className="w-full h-auto max-h-[85vh] object-contain rounded-2xl"
+            />
+            <button
+              onClick={() => setActiveScreenshot(null)}
+              className="absolute top-4 right-4 p-2.5 rounded-full bg-black/60 hover:bg-black/80 text-white/70 hover:text-white border border-white/10 transition-colors cursor-pointer"
+              aria-label="Close dialog"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
