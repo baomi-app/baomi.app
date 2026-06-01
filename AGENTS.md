@@ -6,30 +6,32 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 # Agent Guidelines & Specifications
 
-## Global i18n (全栈双语国际化规范)
-All user-facing interfaces, websites, settings panels, application views, descriptions, tooltips, and console outputs across **all applications and platforms** in the entire baomi family (including Pop, Open YouTube Music, baomi.app index, and subsidiary web apps) must fully support **Internationalization (i18n)** in both English (`en`) and Simplified Chinese (`zh-Hans` / `zh`).
+## Web i18n (网页端双语国际化规范)
+All user-facing interfaces, pages, settings, descriptions, tooltips, and console outputs in the baomi.app web project must fully support **Internationalization (i18n)** in both English (`en`) and Simplified Chinese (`zh`).
 
 ### Development Requirements:
-1. **Swift / macOS Client Apps**:
-   - **UI Views**: Use standard SwiftUI `Text("...")`, `Toggle("...", isOn: ...)`, or AppKit localization methods. Swift/SwiftUI automatically localizes string literals using standard catalog files.
-   - **Programmatic Strings**: Wrap plain `String` variables or logs intended for the user in `String(localized: "...")`.
-   - **Catalogs**: Immediately add any new user-facing strings to the respective application's strings catalog (e.g., [Localizable.xcstrings](file:///Users/arjenzhou/src/github/baomi-app/pop/Sources/Pop/Localizable.xcstrings) for Pop) for both `"en"` and `"zh-Hans"` keys, ensuring 100% translation completeness.
-2. **Web / Next.js / React Apps**:
-   - Use standard localized configuration files or schema specifications (such as bilingual fields inside `baomi.json` configurations).
-   - Ensure all layouts, landing pages, metadata, and buttons support seamless toggling or bilingual representation for both English and Chinese audiences.
+1. **Bilingual Configs & Content**: Use standard localized configuration files or schema specifications (such as bilingual fields inside `baomi.json` configurations).
+2. **Layout & UI**: Ensure all layouts, landing pages, metadata, and buttons support seamless toggling or bilingual representation for both English and Chinese audiences.
 
 ## No Hardcoded Paths (禁止硬编码写死路径)
-Do **NOT** hardcode absolute file paths anywhere in the codebase. This is especially critical for user-specific directories (e.g., paths starting with `/Users/username/...`).
+Do **NOT** hardcode absolute file paths anywhere in the codebase. This is especially critical for user-specific directories or server-specific absolute paths.
 
 ### Development Requirements:
-1. **Dynamic Directory Resolution**: Always resolve directories and files dynamically using native macOS / system APIs:
-   - **In Swift (macOS)**: Use `FileManager.default.homeDirectoryForCurrentUser`, `FileManager.default.urls(for:in:)`, or `NSHomeDirectory()` to locate standard user folders (e.g., Desktop, Documents, Application Support) dynamically.
-   - **In JavaScript/TypeScript (Next.js/Node.js)**: Use standard library utilities like `path.join()`, `os.homedir()`, or process context environment variables.
-2. **Environment & User Isolation**: All caching, databases, temporary file saving, or scratchpad outputs must strictly rely on dynamic user paths or sandbox-provided temporary folders. The codebase must remain completely portable, secure, and executable across different user accounts and machine environments without manual configuration.
+1. **Dynamic Path Resolution**: Always resolve directories and files dynamically:
+   - In JavaScript/TypeScript (Next.js/Node.js), use standard path utilities like `path.join()`, `os.homedir()`, or process context environment variables.
+2. **Environment Isolation**: All server-side data fetching, static generation outputs, and local caching must strictly rely on environment-provided variables or dynamic system/sandbox-provided temp directories.
 
 ## Strict Release Freeze (未经授权禁止发布新版本)
-Do **NOT** publish a new GitHub Release, bump marketing versions in plist/yml, create release-related Git tags (e.g., `v*`), or trigger CI/CD release build pipelines unless the user has **explicitly commanded** you to publish/release a new version ("我让你发才发" / "Only release when explicitly told to do so").
+Do **NOT** publish a new GitHub Release, trigger production deployment pipelines, or bump versions unless the user has **explicitly commanded** you to do so ("我让你发才发" / "Only deploy/release when explicitly told to do so").
 
 ### Development Requirements:
-1. **No Implicit Version Bumping**: All development, refactoring, and hotfixes must be written, built, and tested locally. You are forbidden from proactively increasing the application's version or pushing release tags online.
-2. **Safe Staging & Verification**: Restrict your operations to git commits, feature pushes to local/remote topic branches, and local compilation. Always present the candidate fixes for the user to verify first. Wait for the user's explicit release command before bumping versions and pushing tags.
+1. **Local and Staging Only**: All development, refactoring, and hotfixes must be tested locally. You are forbidden from proactively triggering live production deployments or release tags.
+2. **Safe Verification**: Wait for the user's explicit command before triggering any production builds or tags.
+
+## Strict Commit Controls (未经授权禁止擅自提交代码)
+Do **NOT** execute Git commits (`git commit`) or stage files (`git add`) under any circumstances unless the user has **explicitly commanded/requested** you to commit the changes first (e.g., "先commit一下代码" / "commit the changes").
+
+### Development Requirements:
+1. **No Proactive Committing**: AI coding agents must restrict their operations solely to editing code, compiling, and running local tests. Creating commits proactively is strictly forbidden.
+2. **User-Controlled Git History**: Always present the completed file modifications in the chat for the user to review. Committing must be performed *only* upon receiving an explicit request from the user. This ensures the developer maintains absolute ownership and control over their Git tree, staging state, and commit messages.
+
