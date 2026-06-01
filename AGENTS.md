@@ -22,3 +22,10 @@ Do **NOT** hardcode absolute file paths anywhere in the codebase. This is especi
    - **In Swift (macOS)**: Use `FileManager.default.homeDirectoryForCurrentUser`, `FileManager.default.urls(for:in:)`, or `NSHomeDirectory()` to locate standard user folders (e.g., Desktop, Documents, Application Support) dynamically.
    - **In JavaScript/TypeScript (Next.js/Node.js)**: Use standard library utilities like `path.join()`, `os.homedir()`, or process context environment variables.
 2. **Environment & User Isolation**: All caching, databases, temporary file saving, or scratchpad outputs must strictly rely on dynamic user paths or sandbox-provided temporary folders. The codebase must remain completely portable, secure, and executable across different user accounts and machine environments without manual configuration.
+
+## Strict Release Freeze (未经授权禁止发布新版本)
+Do **NOT** publish a new GitHub Release, bump marketing versions in plist/yml, create release-related Git tags (e.g., `v*`), or trigger CI/CD release build pipelines unless the user has **explicitly commanded** you to publish/release a new version ("我让你发才发" / "Only release when explicitly told to do so").
+
+### Development Requirements:
+1. **No Implicit Version Bumping**: All development, refactoring, and hotfixes must be written, built, and tested locally. You are forbidden from proactively increasing the application's version or pushing release tags online.
+2. **Safe Staging & Verification**: Restrict your operations to git commits, feature pushes to local/remote topic branches, and local compilation. Always present the candidate fixes for the user to verify first. Wait for the user's explicit release command before bumping versions and pushing tags.
