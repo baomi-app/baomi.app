@@ -6,13 +6,17 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 # Agent Guidelines & Specifications
 
-## Pop Settings i18n (Internationalization)
-All settings UI texts, tooltips, descriptions, and user-facing messages in Pop must fully support **Internationalization (i18n)** in both English and Simplified Chinese.
+## Global i18n (全栈双语国际化规范)
+All user-facing interfaces, websites, settings panels, application views, descriptions, tooltips, and console outputs across **all applications and platforms** in the entire baomi family (including Pop, Open YouTube Music, baomi.app index, and subsidiary web apps) must fully support **Internationalization (i18n)** in both English (`en`) and Simplified Chinese (`zh-Hans` / `zh`).
 
 ### Development Requirements:
-1. **SwiftUI Localization**: Use standard SwiftUI `Text("...")` views or `Toggle("...", isOn: ...)` labels. SwiftUI automatically treats literal strings as `LocalizedStringKey` and localizes them at runtime.
-2. **Swift Programmatic Strings**: For plain Swift `String` variables, always use `String(localized: "...")` to enable local lookup.
-3. **Strings Catalog Update**: When introducing any new user-facing text, you **MUST** immediately add the corresponding translations to the [Localizable.xcstrings](file:///Users/arjenzhou/src/github/baomi-app/pop/Sources/Pop/Localizable.xcstrings) catalog for both `"en"` (English) and `"zh-Hans"` (Simplified Chinese) locales. Always verify that both values are fully translated to maintain the bilingual standard of the baomi app family.
+1. **Swift / macOS Client Apps**:
+   - **UI Views**: Use standard SwiftUI `Text("...")`, `Toggle("...", isOn: ...)`, or AppKit localization methods. Swift/SwiftUI automatically localizes string literals using standard catalog files.
+   - **Programmatic Strings**: Wrap plain `String` variables or logs intended for the user in `String(localized: "...")`.
+   - **Catalogs**: Immediately add any new user-facing strings to the respective application's strings catalog (e.g., [Localizable.xcstrings](file:///Users/arjenzhou/src/github/baomi-app/pop/Sources/Pop/Localizable.xcstrings) for Pop) for both `"en"` and `"zh-Hans"` keys, ensuring 100% translation completeness.
+2. **Web / Next.js / React Apps**:
+   - Use standard localized configuration files or schema specifications (such as bilingual fields inside `baomi.json` configurations).
+   - Ensure all layouts, landing pages, metadata, and buttons support seamless toggling or bilingual representation for both English and Chinese audiences.
 
 ## No Hardcoded Paths (禁止硬编码写死路径)
 Do **NOT** hardcode absolute file paths anywhere in the codebase. This is especially critical for user-specific directories (e.g., paths starting with `/Users/username/...`).
