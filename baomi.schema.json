@@ -5,7 +5,7 @@
   "description": "Bilingual app content consumed by baomi.app. Place this file at the root of an app's repo (default branch). All user-facing text is required in both `en` and `zh`.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["name", "status", "platform", "tagline", "description", "features", "tech", "links"],
+  "required": ["name", "status", "platform", "tagline", "description", "features", "links"],
   "properties": {
     "name": {
       "type": "string",
@@ -47,10 +47,9 @@
         "zh": { "type": "array", "items": { "type": "string" } }
       }
     },
-    "tech": {
-      "type": "array",
-      "items": { "type": "string" },
-      "description": "Tech-stack tags (not localized), e.g. [\"Swift\", \"AppKit\"]."
+    "troubleshooting": {
+      "$ref": "#/$defs/localized",
+      "description": "Troubleshooting or FAQ section (localized, supports Markdown formatting). Optional."
     },
     "links": {
       "type": "array",

@@ -41,16 +41,7 @@ export function AppCard({ app }: { app: AppView }) {
 
       <RepoStats meta={app.meta} className="mt-4" />
 
-      <div className="mt-6 flex flex-wrap gap-1.5">
-        {content.tech.map((tech) => (
-          <span
-            key={tech}
-            className="rounded-md border border-white/10 bg-white/[0.04] px-2 py-0.5 font-mono text-xs text-white/50"
-          >
-            {tech}
-          </span>
-        ))}
-      </div>
+
 
       <span className="mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-white/80 transition-colors group-hover:text-white">
         {t(ui.apps.viewDetails)}

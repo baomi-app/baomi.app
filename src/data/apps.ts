@@ -24,7 +24,7 @@ export type AppContent = {
   tagline: L;
   description: L;
   features: { en: string[]; zh: string[] };
-  tech: string[];
+  troubleshooting?: L;
   links: AppLink[];
 };
 

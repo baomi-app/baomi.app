@@ -7,6 +7,7 @@ import { RepoStats } from "@/components/RepoStats";
 import { accentGradient } from "@/data/apps";
 import type { AppView } from "@/data/github";
 import { ui, useLocale } from "@/i18n";
+import { Markdown } from "@/components/Markdown";
 
 export function AppDetail({ app }: { app: AppView }) {
   const { locale, t } = useLocale();
@@ -56,7 +57,9 @@ export function AppDetail({ app }: { app: AppView }) {
           {t(content.tagline)}
         </p>
 
-        <p className="mt-6 text-white/60">{t(content.description)}</p>
+        <div className="mt-6 text-white/65">
+          <Markdown text={t(content.description)} />
+        </div>
 
         <div className="mt-8 flex flex-wrap gap-3">
           {content.links.map((link, i) => (
@@ -132,21 +135,15 @@ export function AppDetail({ app }: { app: AppView }) {
           </ul>
         </div>
 
-        <div className="mt-12">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-white/40">
-            {t(ui.detail.builtWith)}
-          </h2>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {content.tech.map((tech) => (
-              <span
-                key={tech}
-                className="rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1 font-mono text-sm text-white/50"
-              >
-                {tech}
-              </span>
-            ))}
+        {content.troubleshooting && (
+          <div className="mt-14">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-white/40">
+              {t(ui.detail.troubleshooting)}
+            </h2>
+            <Markdown text={t(content.troubleshooting)} className="mt-4" />
           </div>
-        </div>
+        )}
+
       </div>
 
       {activeScreenshot && (
