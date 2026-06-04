@@ -94,9 +94,14 @@ export async function getAppContent(
     );
     if (res.ok) {
       return (await res.json()) as AppContent;
+    } else {
+      console.warn(`[GitHub CDN] Public CDN returned status ${res.status} for ${config.repo}`);
     }
-  } catch {
-    // Ignore, fall back to API
+  } catch (err: any) {
+    if (err && (err.digest === "DYNAMIC_SERVER_USAGE" || (err.message && err.message.includes("Dynamic server usage")))) {
+      throw err;
+    }
+    console.warn(`[GitHub CDN] Failed to fetch via public CDN for ${config.repo}:`, err);
   }
 
   // 2. Fall back to GitHub REST API (which supports private repos when GITHUB_TOKEN is configured)
@@ -107,6 +112,8 @@ export async function getAppContent(
     };
     if (process.env.GITHUB_TOKEN) {
       headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+    } else {
+      console.warn(`[GitHub API] GITHUB_TOKEN is not defined in environment variables!`);
     }
     const res = await fetch(
       `https://api.github.com/repos/${config.repo}/contents/${file}?ref=${branch}`,
@@ -117,9 +124,14 @@ export async function getAppContent(
     );
     if (res.ok) {
       return (await res.json()) as AppContent;
+    } else {
+      console.warn(`[GitHub API] API returned status ${res.status} for ${config.repo}. Token might not have read access to private repos.`);
     }
-  } catch {
-    // ignore
+  } catch (err: any) {
+    if (err && (err.digest === "DYNAMIC_SERVER_USAGE" || (err.message && err.message.includes("Dynamic server usage")))) {
+      throw err;
+    }
+    console.warn(`[GitHub API] Failed to fetch via API for ${config.repo}:`, err);
   }
 
   return null;
