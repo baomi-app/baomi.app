@@ -43,8 +43,10 @@ export type AppConfig = {
 export const apps: AppConfig[] = [
   { id: "pop", repo: "baomi-app/pop" },
   { id: "open-youtube-music", repo: "baomi-app/open-youtube-music" },
+  { id: "everlex", repo: "baomi-app/everlex", contentFile: "everlex-ios/baomi.json" },
   { id: "rss", repo: "people-s-organization/people-s-rss" },
 ];
+
 
 export function getConfig(id: string): AppConfig | undefined {
   return apps.find((app) => app.id === id);
