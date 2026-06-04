@@ -29,7 +29,7 @@ function resolveIconUrl(config: AppConfig, content: AppContent): string | null {
   if (!icon) return null;
   if (/^https?:\/\//.test(icon)) return icon;
   const branch = config.branch ?? "main";
-  return `https://raw.githubusercontent.com/${config.repo}/${branch}/${icon}`;
+  return `/api/proxy?repo=${encodeURIComponent(config.repo)}&path=${encodeURIComponent(icon)}&branch=${encodeURIComponent(branch)}`;
 }
 
 function resolveScreenshotUrls(config: AppConfig, content: AppContent): string[] {
@@ -38,7 +38,7 @@ function resolveScreenshotUrls(config: AppConfig, content: AppContent): string[]
   const branch = config.branch ?? "main";
   return screenshots.map((path) => {
     if (/^https?:\/\//.test(path)) return path;
-    return `https://raw.githubusercontent.com/${config.repo}/${branch}/${path}`;
+    return `/api/proxy?repo=${encodeURIComponent(config.repo)}&path=${encodeURIComponent(path)}&branch=${encodeURIComponent(branch)}`;
   });
 }
 
@@ -85,6 +85,8 @@ export async function getAppContent(
 ): Promise<AppContent | null> {
   const branch = config.branch ?? "main";
   const file = config.contentFile ?? "baomi.json";
+
+  // 1. Try public raw GitHub CDN first
   try {
     const res = await fetch(
       `https://raw.githubusercontent.com/${config.repo}/${branch}/${file}`,
@@ -94,8 +96,32 @@ export async function getAppContent(
       return (await res.json()) as AppContent;
     }
   } catch {
-    // no content → the app is omitted (see getAppView)
+    // Ignore, fall back to API
   }
+
+  // 2. Fall back to GitHub REST API (which supports private repos when GITHUB_TOKEN is configured)
+  try {
+    const headers: Record<string, string> = {
+      Accept: "application/vnd.github.raw",
+      "X-GitHub-Api-Version": "2022-11-28",
+    };
+    if (process.env.GITHUB_TOKEN) {
+      headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+    }
+    const res = await fetch(
+      `https://api.github.com/repos/${config.repo}/contents/${file}?ref=${branch}`,
+      {
+        headers,
+        cache: "no-store",
+      }
+    );
+    if (res.ok) {
+      return (await res.json()) as AppContent;
+    }
+  } catch {
+    // ignore
+  }
+
   return null;
 }
 
