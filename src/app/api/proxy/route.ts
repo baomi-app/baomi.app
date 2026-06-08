@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
     return new Response(res.body, {
       headers: {
         "Content-Type": contentType,
-        "Cache-Control": "public, max-age=3600, s-maxage=3600",
+        "Cache-Control": "no-store, must-revalidate",
       },
     });
   } catch {
