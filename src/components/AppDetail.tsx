@@ -15,6 +15,7 @@ export function AppDetail({ app }: { app: AppView }) {
   const features = content.features[locale];
   const [activeScreenshot, setActiveScreenshot] = useState<string | null>(null);
 
+
   return (
     <section className="relative overflow-hidden">
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
@@ -89,12 +90,12 @@ export function AppDetail({ app }: { app: AppView }) {
                 <div
                   key={url}
                   onClick={() => setActiveScreenshot(url)}
-                  className="relative flex-none w-[280px] sm:w-[480px] aspect-[16/10] rounded-xl overflow-hidden border border-white/10 bg-white/5 shadow-2xl cursor-zoom-in snap-start group transition-all duration-300 hover:scale-[1.02] hover:border-white/20"
+                  className="relative flex-none h-[220px] sm:h-[320px] rounded-xl overflow-hidden border border-white/10 bg-white/5 shadow-2xl cursor-zoom-in snap-start group transition-all duration-300 hover:scale-[1.02] hover:border-white/20"
                 >
                   <img
                     src={url}
                     alt={`${content.name} Screenshot ${idx + 1}`}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    className="h-full w-auto object-contain transition-transform duration-500 group-hover:scale-[1.03]"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -151,7 +152,10 @@ export function AppDetail({ app }: { app: AppView }) {
           onClick={() => setActiveScreenshot(null)}
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md transition-opacity duration-300 cursor-zoom-out animate-fade-in"
         >
-          <div className="relative max-w-5xl max-h-[85vh] overflow-hidden rounded-2xl border border-white/10 shadow-2xl animate-scale-up" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="relative max-w-[90vw] max-h-[85vh] overflow-hidden rounded-2xl border border-white/10 shadow-2xl animate-scale-up"
+            onClick={(e) => e.stopPropagation()}
+          >
             <img
               src={activeScreenshot}
               alt="Screenshot Zoomed"
