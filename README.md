@@ -45,6 +45,7 @@ Full JSON Schema: [`baomi.schema.json`](baomi.schema.json). All user-facing text
 | `description` | `{ en, zh }` | A short paragraph on the detail page |
 | `features` | `{ en: string[], zh: string[] }` | Bullet list on the detail page |
 | `tech` | string[] | Tech-stack tags (not localized) |
+| `privacy` | `{ title?, summary?, updated, files }` (optional) | Privacy page metadata and repo-relative Markdown files. When present, `/<id>/privacy` is rendered from the app repo |
 | `links` | `{ label: { en, zh }, href }[]` | Buttons in order; **first = primary**, rest = secondary |
 
 Example:
@@ -60,6 +61,12 @@ Example:
   "description": { "en": "…", "zh": "…" },
   "features": { "en": ["…"], "zh": ["…"] },
   "tech": ["Swift", "AppKit"],
+  "privacy": {
+    "title": { "en": "Pop Privacy Policy", "zh": "Pop 隐私政策" },
+    "summary": { "en": "Privacy policy for Pop.", "zh": "Pop 隐私政策。" },
+    "updated": { "en": "June 2026", "zh": "2026年6月" },
+    "files": { "en": "docs/privacy.en.md", "zh": "docs/privacy.zh.md" }
+  },
   "links": [
     { "label": { "en": "Download", "zh": "下载" }, "href": "https://…" },
     { "label": { "en": "GitHub", "zh": "GitHub" }, "href": "https://…" }

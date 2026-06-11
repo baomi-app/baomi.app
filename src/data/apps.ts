@@ -7,6 +7,17 @@ export type AppLink = {
 
 export type Accent = { from: string; to: string };
 
+export type AppPrivacy = {
+  /** Optional route title. Falls back to "<app name> Privacy Policy". */
+  title?: L;
+  /** Short metadata description for the privacy page. */
+  summary?: L;
+  /** Human-readable last-updated label. */
+  updated: L;
+  /** Repo-relative Markdown files for the privacy policy body. */
+  files: L;
+};
+
 /**
  * The bilingual content for one app — the source of truth, maintained in the
  * app's OWN repo as `baomi.json` on its default branch. The website fetches it
@@ -25,6 +36,7 @@ export type AppContent = {
   description: L;
   features: { en: string[]; zh: string[] };
   troubleshooting?: L;
+  privacy?: AppPrivacy;
   links: AppLink[];
 };
 

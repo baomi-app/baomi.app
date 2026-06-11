@@ -51,6 +51,30 @@
       "$ref": "#/$defs/localized",
       "description": "Troubleshooting or FAQ section (localized, supports Markdown formatting). Optional."
     },
+    "privacy": {
+      "type": "object",
+      "description": "Privacy policy metadata and repo-relative Markdown files. The site renders this at /<app-id>/privacy when present.",
+      "additionalProperties": false,
+      "required": ["updated", "files"],
+      "properties": {
+        "title": {
+          "$ref": "#/$defs/localized",
+          "description": "Optional privacy page title. Falls back to '<App Name> Privacy Policy'."
+        },
+        "summary": {
+          "$ref": "#/$defs/localized",
+          "description": "Optional privacy page metadata description."
+        },
+        "updated": {
+          "$ref": "#/$defs/localized",
+          "description": "Human-readable last-updated label, e.g. { \"en\": \"June 2026\", \"zh\": \"2026年6月\" }."
+        },
+        "files": {
+          "$ref": "#/$defs/localized",
+          "description": "Repo-relative Markdown policy files, e.g. { \"en\": \"docs/privacy.en.md\", \"zh\": \"docs/privacy.zh.md\" }."
+        }
+      }
+    },
     "links": {
       "type": "array",
       "description": "Action buttons, in order. The first is the primary (solid) button; the rest are secondary (outline).",

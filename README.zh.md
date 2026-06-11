@@ -45,6 +45,7 @@
 | `description` | `{ en, zh }` | 一小段描述，显示在详情页 |
 | `features` | `{ en: string[], zh: string[] }` | 详情页的功能列表 |
 | `tech` | string[] | 技术栈标签（不本地化） |
+| `privacy` | `{ title?, summary?, updated, files }`（可选） | 隐私页元信息和仓库内 Markdown 文件路径。存在时，`/<id>/privacy` 会从该 app 仓库渲染 |
 | `links` | `{ label: { en, zh }, href }[]` | 按钮，按顺序排列；**第一个为主按钮**，其余为次按钮 |
 
 示例：
@@ -60,6 +61,12 @@
   "description": { "en": "…", "zh": "…" },
   "features": { "en": ["…"], "zh": ["…"] },
   "tech": ["Swift", "AppKit"],
+  "privacy": {
+    "title": { "en": "Pop Privacy Policy", "zh": "Pop 隐私政策" },
+    "summary": { "en": "Privacy policy for Pop.", "zh": "Pop 隐私政策。" },
+    "updated": { "en": "June 2026", "zh": "2026年6月" },
+    "files": { "en": "docs/privacy.en.md", "zh": "docs/privacy.zh.md" }
+  },
   "links": [
     { "label": { "en": "Download", "zh": "下载" }, "href": "https://…" },
     { "label": { "en": "GitHub", "zh": "GitHub" }, "href": "https://…" }
