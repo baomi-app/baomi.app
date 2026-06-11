@@ -86,6 +86,8 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(defaultLocale);
 
   useEffect(() => {
+    // Keep the first client render aligned with SSR, then apply stored/browser preference.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLocaleState(detectInitial());
   }, []);
 

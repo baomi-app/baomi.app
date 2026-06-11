@@ -7,8 +7,6 @@
 
 import { apps, type AppConfig, type AppContent } from "@/data/apps";
 
-const REVALIDATE_SECONDS = 3600; // refresh at most once per hour
-
 export type RepoMeta = {
   stars: number;
   version: string | null; // latest release tag, or null if no releases
@@ -51,6 +49,18 @@ function ghHeaders(): HeadersInit {
     headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
   }
   return headers;
+}
+
+function isDynamicServerUsageError(err: unknown): boolean {
+  const digest =
+    typeof err === "object" && err !== null && "digest" in err
+      ? (err as { digest?: unknown }).digest
+      : undefined;
+  const message = err instanceof Error ? err.message : "";
+  return (
+    digest === "DYNAMIC_SERVER_USAGE" ||
+    message.includes("Dynamic server usage")
+  );
 }
 
 async function ghGet(path: string): Promise<Record<string, unknown> | null> {
@@ -97,8 +107,8 @@ export async function getAppContent(
     } else {
       console.warn(`[GitHub CDN] Public CDN returned status ${res.status} for ${config.repo}`);
     }
-  } catch (err: any) {
-    if (err && (err.digest === "DYNAMIC_SERVER_USAGE" || (err.message && err.message.includes("Dynamic server usage")))) {
+  } catch (err: unknown) {
+    if (isDynamicServerUsageError(err)) {
       throw err;
     }
     console.warn(`[GitHub CDN] Failed to fetch via public CDN for ${config.repo}:`, err);
@@ -127,8 +137,8 @@ export async function getAppContent(
     } else {
       console.warn(`[GitHub API] API returned status ${res.status} for ${config.repo}. Token might not have read access to private repos.`);
     }
-  } catch (err: any) {
-    if (err && (err.digest === "DYNAMIC_SERVER_USAGE" || (err.message && err.message.includes("Dynamic server usage")))) {
+  } catch (err: unknown) {
+    if (isDynamicServerUsageError(err)) {
       throw err;
     }
     console.warn(`[GitHub API] Failed to fetch via API for ${config.repo}:`, err);
