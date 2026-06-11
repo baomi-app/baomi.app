@@ -40,6 +40,10 @@ function resolveScreenshotUrls(config: AppConfig, content: AppContent): string[]
   });
 }
 
+function encodeRepoPath(path: string): string {
+  return path.split("/").map(encodeURIComponent).join("/");
+}
+
 function ghHeaders(): HeadersInit {
   const headers: Record<string, string> = {
     Accept: "application/vnd.github+json",
@@ -61,6 +65,84 @@ function isDynamicServerUsageError(err: unknown): boolean {
     digest === "DYNAMIC_SERVER_USAGE" ||
     message.includes("Dynamic server usage")
   );
+}
+
+async function fetchRepoRaw(
+  config: AppConfig,
+  path: string,
+  responseType: "json"
+): Promise<Record<string, unknown> | null>;
+async function fetchRepoRaw(
+  config: AppConfig,
+  path: string,
+  responseType: "text"
+): Promise<string | null>;
+async function fetchRepoRaw(
+  config: AppConfig,
+  path: string,
+  responseType: "json" | "text"
+): Promise<Record<string, unknown> | string | null> {
+  const branch = config.branch ?? "main";
+  const encodedPath = encodeRepoPath(path);
+
+  // 1. Try public raw GitHub CDN first.
+  try {
+    const res = await fetch(
+      `https://raw.githubusercontent.com/${config.repo}/${branch}/${encodedPath}`,
+      { cache: "no-store" }
+    );
+    if (res.ok) {
+      return responseType === "json" ? await res.json() : await res.text();
+    }
+    console.warn(
+      `[GitHub CDN] Public CDN returned status ${res.status} for ${config.repo}/${path}`
+    );
+  } catch (err: unknown) {
+    if (isDynamicServerUsageError(err)) {
+      throw err;
+    }
+    console.warn(
+      `[GitHub CDN] Failed to fetch via public CDN for ${config.repo}/${path}:`,
+      err
+    );
+  }
+
+  // 2. Fall back to GitHub REST API, which supports private repos with GITHUB_TOKEN.
+  try {
+    const headers: Record<string, string> = {
+      Accept: "application/vnd.github.raw",
+      "X-GitHub-Api-Version": "2022-11-28",
+    };
+    if (process.env.GITHUB_TOKEN) {
+      headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+    } else {
+      console.warn(`[GitHub API] GITHUB_TOKEN is not defined in environment variables!`);
+    }
+
+    const res = await fetch(
+      `https://api.github.com/repos/${config.repo}/contents/${encodedPath}?ref=${encodeURIComponent(branch)}`,
+      {
+        headers,
+        cache: "no-store",
+      }
+    );
+    if (res.ok) {
+      return responseType === "json" ? await res.json() : await res.text();
+    }
+    console.warn(
+      `[GitHub API] API returned status ${res.status} for ${config.repo}/${path}. Token might not have read access to private repos.`
+    );
+  } catch (err: unknown) {
+    if (isDynamicServerUsageError(err)) {
+      throw err;
+    }
+    console.warn(
+      `[GitHub API] Failed to fetch via API for ${config.repo}/${path}:`,
+      err
+    );
+  }
+
+  return null;
 }
 
 async function ghGet(path: string): Promise<Record<string, unknown> | null> {
@@ -93,58 +175,17 @@ export async function getRepoMeta(repo: string): Promise<RepoMeta | null> {
 export async function getAppContent(
   config: AppConfig
 ): Promise<AppContent | null> {
-  const branch = config.branch ?? "main";
   const file = config.contentFile ?? "baomi.json";
+  const content = await fetchRepoRaw(config, file, "json");
 
-  // 1. Try public raw GitHub CDN first
-  try {
-    const res = await fetch(
-      `https://raw.githubusercontent.com/${config.repo}/${branch}/${file}`,
-      { cache: "no-store" }
-    );
-    if (res.ok) {
-      return (await res.json()) as AppContent;
-    } else {
-      console.warn(`[GitHub CDN] Public CDN returned status ${res.status} for ${config.repo}`);
-    }
-  } catch (err: unknown) {
-    if (isDynamicServerUsageError(err)) {
-      throw err;
-    }
-    console.warn(`[GitHub CDN] Failed to fetch via public CDN for ${config.repo}:`, err);
-  }
+  return content as AppContent | null;
+}
 
-  // 2. Fall back to GitHub REST API (which supports private repos when GITHUB_TOKEN is configured)
-  try {
-    const headers: Record<string, string> = {
-      Accept: "application/vnd.github.raw",
-      "X-GitHub-Api-Version": "2022-11-28",
-    };
-    if (process.env.GITHUB_TOKEN) {
-      headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
-    } else {
-      console.warn(`[GitHub API] GITHUB_TOKEN is not defined in environment variables!`);
-    }
-    const res = await fetch(
-      `https://api.github.com/repos/${config.repo}/contents/${file}?ref=${branch}`,
-      {
-        headers,
-        cache: "no-store",
-      }
-    );
-    if (res.ok) {
-      return (await res.json()) as AppContent;
-    } else {
-      console.warn(`[GitHub API] API returned status ${res.status} for ${config.repo}. Token might not have read access to private repos.`);
-    }
-  } catch (err: unknown) {
-    if (isDynamicServerUsageError(err)) {
-      throw err;
-    }
-    console.warn(`[GitHub API] Failed to fetch via API for ${config.repo}:`, err);
-  }
-
-  return null;
+export async function getRepoText(
+  config: AppConfig,
+  path: string
+): Promise<string | null> {
+  return fetchRepoRaw(config, path, "text");
 }
 
 export async function getAppView(config: AppConfig): Promise<AppView | null> {
