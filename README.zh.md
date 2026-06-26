@@ -86,7 +86,19 @@ npm run build
 
 | 变量 | 是否必需 | 用途 |
 | --- | --- | --- |
-| `GITHUB_TOKEN` | 推荐 | 提升 GitHub API 限额，让版本 / Star / 更新时间稳定显示。一个**不勾任何 scope** 的 classic token 就够（只读公开数据）。内容（`baomi.json`）不需要它也能用。 |
+| `GITHUB_TOKEN` | 私有 app 仓库必需 | 让站点读取各 app 仓库里的 `baomi.json` 和媒体资源。建议使用 fine-grained token，只给私有 app 仓库的 Contents 只读权限。在 GitHub Actions 中通过仓库 secret `APP_CONTENT_GITHUB_TOKEN` 注入。 |
+
+### GitHub Actions 部署
+
+生产环境由 GitHub Actions 部署：每次 push 到 `main` 后自动构建并发布。
+
+需要配置这些仓库变量和 secret：
+
+| 名称 | 类型 | 用途 |
+| --- | --- |
+| `CLOUDFLARE_ACCOUNT_ID` | 仓库变量 | Wrangler 使用的 Cloudflare account。 |
+| `CLOUDFLARE_API_TOKEN` | 仓库 secret | 让 Wrangler 部署 Worker。 |
+| `APP_CONTENT_GITHUB_TOKEN` | 仓库 secret | 构建时作为 `GITHUB_TOKEN` 注入，让 SSG 读取私有 app 内容。 |
 
 ## 本仓库里哪些是写死的
 

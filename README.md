@@ -86,7 +86,19 @@ npm run build
 
 | Var | Required | Purpose |
 | --- | --- | --- |
-| `GITHUB_TOKEN` | recommended | Lifts the GitHub API rate limit so version / stars / updated render reliably. A classic token with **no scopes** is enough (read-only public data). Content (`baomi.json`) works without it. |
+| `GITHUB_TOKEN` | required for private app repos | Lets the site read each app repo's `baomi.json` and media. Use a fine-grained token with read-only Contents access to the private app repositories. In GitHub Actions, this is provided through the `APP_CONTENT_GITHUB_TOKEN` repository secret. |
+
+### GitHub Actions deployment
+
+Production is deployed by GitHub Actions on every push to `main`.
+
+Configure these repository variables and secrets:
+
+| Name | Type | Purpose |
+| --- | --- |
+| `CLOUDFLARE_ACCOUNT_ID` | variable | Cloudflare account used by Wrangler. |
+| `CLOUDFLARE_API_TOKEN` | secret | Deploys the Worker through Wrangler. |
+| `APP_CONTENT_GITHUB_TOKEN` | secret | Exposed as `GITHUB_TOKEN` during the build so SSG can read private app content. |
 
 ## What's hardcoded in this repo
 
