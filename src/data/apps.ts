@@ -26,6 +26,8 @@ export type AppPrivacy = {
 export type AppContent = {
   name: string;
   status: "released" | "beta" | "wip";
+  version?: string;
+  build?: string | number;
   /** Icon: a path relative to the repo root (e.g. "icon.png") or an absolute URL. */
   icon?: string;
   screenshots?: string[];

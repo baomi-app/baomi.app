@@ -6,6 +6,11 @@
 //     fetched from raw.githubusercontent.com (CDN, no rate limit / token).
 
 import { apps, type AppConfig, type AppContent } from "@/data/apps";
+import { getGitHubToken } from "@/data/github-token";
+
+const GITHUB_REVALIDATE_SECONDS = 3600;
+const GITHUB_CACHE_TAG = "github";
+const MAX_CACHE_TAG_LENGTH = 256;
 
 export type RepoMeta = {
   stars: number;
@@ -22,21 +27,44 @@ export type AppView = AppConfig & {
   screenshotUrls: string[];
 };
 
+function assetVersion(content: AppContent): string | null {
+  const parts = [content.version, content.build]
+    .filter((part): part is string | number => part !== undefined && part !== null)
+    .map(String)
+    .filter(Boolean);
+
+  return parts.length > 0 ? parts.join("-") : null;
+}
+
+function proxiedRepoAssetUrl(
+  config: AppConfig,
+  path: string,
+  content: AppContent
+): string {
+  const params = new URLSearchParams({
+    repo: config.repo,
+    path,
+    branch: config.branch ?? "main",
+  });
+  const version = assetVersion(content);
+  if (version) params.set("v", version);
+
+  return `/api/proxy?${params.toString()}`;
+}
+
 function resolveIconUrl(config: AppConfig, content: AppContent): string | null {
   const icon = content.icon;
   if (!icon) return null;
   if (/^https?:\/\//.test(icon)) return icon;
-  const branch = config.branch ?? "main";
-  return `/api/proxy?repo=${encodeURIComponent(config.repo)}&path=${encodeURIComponent(icon)}&branch=${encodeURIComponent(branch)}`;
+  return proxiedRepoAssetUrl(config, icon, content);
 }
 
 function resolveScreenshotUrls(config: AppConfig, content: AppContent): string[] {
   const screenshots = content.screenshots;
   if (!screenshots) return [];
-  const branch = config.branch ?? "main";
   return screenshots.map((path) => {
     if (/^https?:\/\//.test(path)) return path;
-    return `/api/proxy?repo=${encodeURIComponent(config.repo)}&path=${encodeURIComponent(path)}&branch=${encodeURIComponent(branch)}`;
+    return proxiedRepoAssetUrl(config, path, content);
   });
 }
 
@@ -44,13 +72,47 @@ function encodeRepoPath(path: string): string {
   return path.split("/").map(encodeURIComponent).join("/");
 }
 
-function ghHeaders(): HeadersInit {
+function stringHash(value: string): string {
+  let hash = 5381;
+  for (let i = 0; i < value.length; i += 1) {
+    hash = (hash * 33) ^ value.charCodeAt(i);
+  }
+  return (hash >>> 0).toString(36);
+}
+
+function cacheTag(value: string): string {
+  if (value.length <= MAX_CACHE_TAG_LENGTH) return value;
+  return `${value.slice(0, MAX_CACHE_TAG_LENGTH - 12)}:${stringHash(value)}`;
+}
+
+function repoTag(repo: string): string {
+  return cacheTag(`github:${repo}`);
+}
+
+function repoFileTag(config: AppConfig, path: string): string {
+  return cacheTag(`github:${config.repo}:${config.branch ?? "main"}:${path}`);
+}
+
+async function githubJsonHeaders(): Promise<Record<string, string>> {
   const headers: Record<string, string> = {
     Accept: "application/vnd.github+json",
     "X-GitHub-Api-Version": "2022-11-28",
   };
-  if (process.env.GITHUB_TOKEN) {
-    headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+  const token = await getGitHubToken();
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+  return headers;
+}
+
+async function githubRawHeaders(): Promise<Record<string, string>> {
+  const headers: Record<string, string> = {
+    Accept: "application/vnd.github.raw",
+    "X-GitHub-Api-Version": "2022-11-28",
+  };
+  const token = await getGitHubToken();
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
   }
   return headers;
 }
@@ -87,9 +149,16 @@ async function fetchRepoRaw(
 
   // 1. Try public raw GitHub CDN first.
   try {
+    const headers = await githubRawHeaders();
     const res = await fetch(
       `https://raw.githubusercontent.com/${config.repo}/${branch}/${encodedPath}`,
-      { cache: "no-store" }
+      {
+        headers,
+        next: {
+          revalidate: GITHUB_REVALIDATE_SECONDS,
+          tags: [GITHUB_CACHE_TAG, repoTag(config.repo), repoFileTag(config, path)],
+        },
+      }
     );
     if (res.ok) {
       return responseType === "json" ? await res.json() : await res.text();
@@ -109,13 +178,8 @@ async function fetchRepoRaw(
 
   // 2. Fall back to GitHub REST API, which supports private repos with GITHUB_TOKEN.
   try {
-    const headers: Record<string, string> = {
-      Accept: "application/vnd.github.raw",
-      "X-GitHub-Api-Version": "2022-11-28",
-    };
-    if (process.env.GITHUB_TOKEN) {
-      headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
-    } else {
+    const headers = await githubRawHeaders();
+    if (!("Authorization" in headers)) {
       console.warn(`[GitHub API] GITHUB_TOKEN is not defined in environment variables!`);
     }
 
@@ -123,7 +187,10 @@ async function fetchRepoRaw(
       `https://api.github.com/repos/${config.repo}/contents/${encodedPath}?ref=${encodeURIComponent(branch)}`,
       {
         headers,
-        cache: "no-store",
+        next: {
+          revalidate: GITHUB_REVALIDATE_SECONDS,
+          tags: [GITHUB_CACHE_TAG, repoTag(config.repo), repoFileTag(config, path)],
+        },
       }
     );
     if (res.ok) {
@@ -148,8 +215,11 @@ async function fetchRepoRaw(
 async function ghGet(path: string): Promise<Record<string, unknown> | null> {
   try {
     const res = await fetch(`https://api.github.com/${path}`, {
-      headers: ghHeaders(),
-      cache: "no-store",
+      headers: await githubJsonHeaders(),
+      next: {
+        revalidate: GITHUB_REVALIDATE_SECONDS,
+        tags: [GITHUB_CACHE_TAG, cacheTag(`github:${path}`)],
+      },
     });
     if (!res.ok) return null;
     return (await res.json()) as Record<string, unknown>;

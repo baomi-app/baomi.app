@@ -1,34 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Space_Grotesk, Sora, Poppins } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import { LocaleProvider } from "@/i18n";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
-  subsets: ["latin"],
-});
-
-const sora = Sora({
-  variable: "--font-sora",
-  subsets: ["latin"],
-});
-
-const poppins = Poppins({
-  variable: "--font-poppins",
-  weight: ["400", "500", "600", "700"],
-  subsets: ["latin"],
-});
 
 const siteUrl = "https://baomi.app";
 
@@ -64,13 +36,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${sora.variable} ${poppins.variable} h-full antialiased`}
-    >
+    <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col">
         <LocaleProvider>{children}</LocaleProvider>
-        <Analytics />
       </body>
     </html>
   );
