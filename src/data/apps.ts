@@ -57,6 +57,7 @@ export const apps: AppConfig[] = [
   { id: "open-youtube-music", repo: "baomi-app/open-youtube-music" },
   { id: "everlex", repo: "baomi-app/everlex-ios" },
   { id: "rss", repo: "people-s-organization/people-s-rss" },
+  { id: "codex-provider-bridge", repo: "people-s-organization/codex-provider-bridge" },
 ];
 
 
