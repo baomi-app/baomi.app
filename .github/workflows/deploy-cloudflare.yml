@@ -38,22 +38,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.APP_CONTENT_GITHUB_TOKEN }}
 
-      - name: Deploy to Cloudflare Workers
+      - name: Populate remote incremental cache
         run: |
-          for attempt in 1 2 3; do
-            if npx opennextjs-cloudflare deploy; then
-              exit 0
-            fi
-
-            if [ "$attempt" -eq 3 ]; then
-              exit 1
-            fi
-
-            sleep_seconds=$((attempt * 30))
-            echo "Deploy failed; retrying in ${sleep_seconds}s..."
-            sleep "$sleep_seconds"
-          done
+          if ! npx opennextjs-cloudflare populateCache remote; then
+            echo "::warning::OpenNext could not pre-populate the remote R2 incremental cache. Continuing with deployment; the Worker can repopulate cache entries at runtime."
+          fi
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.APP_CONTENT_GITHUB_TOKEN }}
+
+      - name: Deploy to Cloudflare Workers
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
