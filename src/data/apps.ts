@@ -60,6 +60,7 @@ export const apps: AppConfig[] = [
   { id: "everlex", repo: "baomi-app/everlex-ios" },
   { id: "rss", repo: "people-s-organization/people-s-rss" },
   { id: "codex-provider-bridge", repo: "people-s-organization/codex-provider-bridge" },
+  { id: "forge-next", repo: "baomi-app/forge-next" },
 ];
 
 
