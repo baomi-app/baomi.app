@@ -38,18 +38,26 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.APP_CONTENT_GITHUB_TOKEN }}
 
-      - name: Populate remote incremental cache
+      - name: Verify R2 cache bucket access
         run: |
-          if ! npx opennextjs-cloudflare populateCache remote; then
-            echo "::warning::OpenNext could not pre-populate the remote R2 incremental cache. Continuing with deployment; the Worker can repopulate cache entries at runtime."
+          if ! npx wrangler r2 bucket info baomi-app-opennext-cache; then
+            echo "::error::CLOUDFLARE_API_TOKEN cannot access the R2 bucket baomi-app-opennext-cache. Regenerate the token with Account > Workers R2 Storage Read and Edit permissions for account $CLOUDFLARE_ACCOUNT_ID."
+            exit 1
           fi
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+      - name: Populate remote incremental cache
+        run: npx opennextjs-cloudflare populateCache remote
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.APP_CONTENT_GITHUB_TOKEN }}
 
       - name: Deploy to Cloudflare Workers
-        run: npx wrangler deploy
+        run: npx wrangler deploy --no-bundle
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          OPEN_NEXT_DEPLOY: "true"
