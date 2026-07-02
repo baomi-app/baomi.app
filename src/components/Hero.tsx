@@ -1,50 +1,89 @@
 "use client";
 
+import { AppIcon } from "@/components/AppIcon";
+import type { AppView } from "@/data/github";
 import { ui, useLocale } from "@/i18n";
 
-export function Hero() {
+export function Hero({ views }: { views: AppView[] }) {
   const { t } = useLocale();
+  const featured = views.slice(0, 5);
+
   return (
-    <section className="relative overflow-hidden">
-      {/* aurora background */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-        <div className="animate-float-slow absolute -top-32 left-1/2 h-[34rem] w-[34rem] -translate-x-1/2 rounded-full bg-orange-500/20 blur-[120px]" />
-        <div className="absolute -bottom-40 -left-20 h-[26rem] w-[26rem] rounded-full bg-sky-500/10 blur-[120px]" />
-        <div className="absolute right-0 top-20 h-[20rem] w-[20rem] rounded-full bg-indigo-500/10 blur-[120px]" />
-      </div>
-
-      <div className="mx-auto max-w-5xl px-6 pt-24 pb-20 sm:pt-32 sm:pb-28">
-        <span className="animate-pop-in inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-white/70">
-          <span className="h-1.5 w-1.5 rounded-full bg-orange-400" />
-          {t(ui.hero.badge)}
-        </span>
-
-        <h1 className="animate-pop-in mt-6 max-w-3xl text-balance text-5xl font-bold leading-[1.05] tracking-tight sm:text-7xl">
-          {t(ui.hero.titleLead)}
-          <span className="bg-gradient-to-r from-amber-300 via-orange-400 to-rose-400 bg-clip-text text-transparent">
-            {t(ui.hero.titleAccent)}
+    <section className="relative overflow-hidden border-b border-[var(--rule)]">
+      <div className="mx-auto grid max-w-6xl gap-10 px-6 pt-20 pb-16 sm:pt-28 sm:pb-20 lg:grid-cols-[1.02fr_0.98fr] lg:items-end">
+        <div>
+          <span className="animate-label-in label-cut inline-flex items-center gap-2 bg-[var(--saffron)] px-3.5 py-1.5 pr-6 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--foreground)] shadow-[4px_4px_0_var(--foreground)]">
+            <span className="h-2 w-2 bg-[var(--tomato)]" />
+            {t(ui.hero.badge)}
           </span>
-        </h1>
 
-        <p className="animate-pop-in mt-6 max-w-xl text-lg leading-relaxed text-white/60">
-          {t(ui.hero.subtitle)}
-        </p>
+          <h1 className="animate-label-in mt-8 max-w-4xl text-balance font-display text-5xl font-semibold leading-[0.98] tracking-normal text-[var(--foreground)] sm:text-7xl lg:text-8xl">
+            {t(ui.hero.titleLead)}
+            <span className="text-[var(--teal)]">
+              {t(ui.hero.titleAccent)}
+            </span>
+          </h1>
 
-        <div className="animate-pop-in mt-9 flex flex-wrap items-center gap-3">
-          <a
-            href="#apps"
-            className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black transition-transform hover:scale-[1.03]"
-          >
-            {t(ui.hero.ctaExplore)}
-          </a>
-          <a
-            href="https://github.com/baomi-app"
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-full border border-white/15 px-5 py-2.5 text-sm font-semibold text-white/80 transition-colors hover:bg-white/5 hover:text-white"
-          >
-            {t(ui.hero.ctaGithub)}
-          </a>
+          <p className="animate-label-in mt-6 max-w-2xl text-lg leading-8 text-[var(--ink-muted)] sm:text-xl">
+            {t(ui.hero.subtitle)}
+          </p>
+
+          <div className="animate-label-in mt-9 flex flex-wrap items-center gap-3">
+            <a
+              href="#apps"
+              className="inline-flex min-h-11 items-center justify-center rounded-md bg-[var(--foreground)] px-5 text-sm font-semibold text-white shadow-[4px_4px_0_var(--saffron)] transition-transform hover:-translate-y-0.5"
+            >
+              {t(ui.hero.ctaExplore)}
+            </a>
+            <a
+              href="https://github.com/baomi-app"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex min-h-11 items-center justify-center rounded-md border border-[var(--foreground)] bg-[var(--surface)] px-5 text-sm font-semibold text-[var(--foreground)] transition-colors hover:bg-white"
+            >
+              {t(ui.hero.ctaGithub)}
+            </a>
+          </div>
+        </div>
+
+        <div className="tool-ledger relative border border-[var(--foreground)] p-3 shadow-[8px_8px_0_var(--foreground)]">
+          <div className="flex items-center justify-between border-b border-[var(--foreground)] bg-[var(--surface-strong)] px-3 py-2">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--teal)]">
+              {t(ui.hero.catalogLabel)}
+            </p>
+            <p className="font-mono text-[11px] text-[var(--ink-muted)]">
+              {t(ui.hero.catalogMeta)}
+            </p>
+          </div>
+
+          <div className="mt-3 space-y-2">
+            {featured.length === 0 && (
+              <div className="border border-dashed border-[var(--rule)] bg-[var(--surface-strong)] px-4 py-8 text-sm text-[var(--ink-muted)]">
+                {t(ui.hero.catalogEmpty)}
+              </div>
+            )}
+
+            {featured.map((app, index) => (
+              <a
+                key={app.id}
+                href={`/${app.id}`}
+                className="group grid grid-cols-[auto_1fr_auto] items-center gap-3 border border-[var(--rule)] bg-[var(--surface-strong)] p-3 transition-transform hover:-translate-x-1 hover:border-[var(--foreground)]"
+              >
+                <AppIcon app={app} className="h-11 w-11" />
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-[var(--foreground)]">
+                    {app.content.name}
+                  </p>
+                  <p className="mt-0.5 truncate text-xs text-[var(--ink-muted)]">
+                    {t(app.content.platform)}
+                  </p>
+                </div>
+                <span className="font-mono text-xs text-[var(--ink-muted)] transition-colors group-hover:text-[var(--teal)]">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </section>

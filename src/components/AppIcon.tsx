@@ -15,14 +15,14 @@ export function AppIcon({
   const [errored, setErrored] = useState(false);
 
   if (app.iconUrl && !errored) {
-    // eslint-disable-next-line @next/next/no-img-element
     return (
+      // eslint-disable-next-line @next/next/no-img-element
       <img
         src={app.iconUrl}
         alt={`${app.content.name} icon`}
         loading="lazy"
         onError={() => setErrored(true)}
-        className={`rounded-2xl object-cover shadow-lg ${className}`}
+        className={`rounded-lg object-cover shadow-sm ring-1 ring-black/10 ${className}`}
       />
     );
   }
@@ -30,7 +30,7 @@ export function AppIcon({
   return (
     <span
       style={{ backgroundImage: accentGradient(app.content.accent) }}
-      className={`grid place-items-center rounded-2xl font-semibold text-black shadow-lg ${className}`}
+      className={`grid place-items-center rounded-lg font-semibold text-black shadow-sm ring-1 ring-black/10 ${className}`}
     >
       {app.content.name.charAt(0)}
     </span>

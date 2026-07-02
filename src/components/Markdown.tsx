@@ -20,10 +20,10 @@ function renderBlock(block: string, index: number): React.ReactNode {
     const level = heading[1].length;
     const className =
       level === 1
-        ? "mt-8 first:mt-0 text-2xl font-bold tracking-tight text-white"
+        ? "mt-8 first:mt-0 text-2xl font-bold tracking-tight text-[var(--foreground)]"
         : level === 2
-          ? "mt-8 first:mt-0 text-lg font-semibold text-white"
-          : "mt-6 first:mt-0 text-base font-semibold text-white";
+          ? "mt-8 first:mt-0 text-lg font-semibold text-[var(--foreground)]"
+          : "mt-6 first:mt-0 text-base font-semibold text-[var(--foreground)]";
 
     if (level === 1) {
       return (
@@ -52,7 +52,7 @@ function renderBlock(block: string, index: number): React.ReactNode {
     return (
       <ul
         key={index}
-        className="mt-4 first:mt-0 list-disc space-y-2 pl-5 leading-relaxed text-white/70"
+        className="mt-4 first:mt-0 list-disc space-y-2 pl-5 leading-relaxed text-[var(--ink-muted)]"
       >
         {lines.map((line, lineIndex) => (
           <li key={`${index}-${lineIndex}`}>
@@ -64,7 +64,7 @@ function renderBlock(block: string, index: number): React.ReactNode {
   }
 
   return (
-    <p key={index} className="mt-4 first:mt-0 leading-relaxed text-white/70">
+    <p key={index} className="mt-4 first:mt-0 leading-relaxed text-[var(--ink-muted)]">
       {parseInline(block)}
     </p>
   );
@@ -78,19 +78,19 @@ function parseInline(text: string): React.ReactNode[] {
   return parts.map((part, index) => {
     if (part.startsWith("**") && part.endsWith("**")) {
       return (
-        <strong key={index} className="font-semibold text-white">
+        <strong key={index} className="font-semibold text-[var(--foreground)]">
           {part.slice(2, -2)}
         </strong>
       );
     }
     if (part.startsWith("*") && part.endsWith("*")) {
-      return <em key={index} className="italic text-white/95">{part.slice(1, -1)}</em>;
+      return <em key={index} className="italic text-[var(--foreground)]">{part.slice(1, -1)}</em>;
     }
     if (part.startsWith("`") && part.endsWith("`")) {
       return (
         <code
           key={index}
-          className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-sm text-white/90 border border-white/5"
+          className="rounded bg-white px-1.5 py-0.5 font-mono text-sm text-[var(--foreground)] border border-[var(--rule)]"
         >
           {part.slice(1, -1)}
         </code>
@@ -105,7 +105,7 @@ function parseInline(text: string): React.ReactNode[] {
             href={match[2]}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-white underline underline-offset-4 decoration-white/30 hover:decoration-white transition-colors"
+            className="text-[var(--teal)] underline underline-offset-4 decoration-[rgba(11,107,99,0.35)] transition-colors hover:decoration-[var(--teal)]"
           >
             {match[1]}
           </a>

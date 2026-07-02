@@ -12,7 +12,7 @@ export default async function Home() {
     <>
       <Nav />
       <main className="flex-1">
-        <Hero />
+        <Hero views={views} />
         <AppsSection views={views} />
       </main>
       <Footer />

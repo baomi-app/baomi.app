@@ -26,23 +26,27 @@ export const ui = {
     apps: { en: "Apps", zh: "应用" },
   },
   hero: {
-    badge: { en: "Let tools be tools", zh: "让工具回归工具" },
-    // EN keeps a trailing space before the gradient accent; ZH has none (no
-    // space after a full-width comma). The Hero joins them without inserting one.
-    titleLead: { en: "Agile in form, ", zh: "敏捷于形，" },
-    titleAccent: { en: "focused on one.", zh: "专精于一。" },
+    badge: { en: "Small tools, kept sharp", zh: "小工具，保持锋利" },
+    // EN keeps a trailing space before the accent phrase; ZH has none. The Hero
+    // joins them without inserting extra whitespace.
+    titleLead: { en: "Apps that stay small, ", zh: "把有用做快，" },
+    titleAccent: { en: "and get useful fast.", zh: "把复杂放轻。" },
     subtitle: {
-      en: "Lightweight tools by baomi — pure, agile, and a pleasure at your fingertips.",
-      zh: "来自 baomi 的轻量工具 —— 纯粹、敏捷，悦于指尖。",
+      en: "baomi.app is a bench of focused utilities: native-feeling, easy to inspect, and finished before they become platforms.",
+      zh: "baomi.app 是一张轻量工具台：手感原生、边界清楚，在变成平台之前就把事情做完。",
     },
-    ctaExplore: { en: "Explore the apps", zh: "看看应用" },
+    ctaExplore: { en: "Browse the bench", zh: "浏览工具台" },
     ctaGithub: { en: "View on GitHub", zh: "在 GitHub 查看" },
+    catalogLabel: { en: "Current bench", zh: "当前工具台" },
+    catalogMeta: { en: "Live app index", zh: "实时应用索引" },
+    catalogEmpty: { en: "Apps are loading", zh: "应用载入中" },
   },
   apps: {
-    heading: { en: "The apps", zh: "全部应用" },
+    eyebrow: { en: "The shelf", zh: "工具架" },
+    heading: { en: "Each app keeps a narrow promise.", zh: "每个应用只守住一个清楚承诺。" },
     sub: {
-      en: "Focused, native utility apps that do one thing and stay out of your way.",
-      zh: "专注特定功能的原生工具，用完即走。",
+      en: "A small catalog of native utility apps and developer tools, pulled from each repository's bilingual baomi.json.",
+      zh: "一组原生工具和开发者小应用，内容来自各自仓库的双语 baomi.json。",
     },
     count: { en: "apps", zh: "个应用" },
     viewDetails: { en: "View details", zh: "查看详情" },
@@ -53,6 +57,7 @@ export const ui = {
     builtWith: { en: "Built with", zh: "技术栈" },
     screenshots: { en: "Screenshots", zh: "界面预览" },
     troubleshooting: { en: "Troubleshooting", zh: "常见问题" },
+    close: { en: "Close screenshot", zh: "关闭截图" },
   },
   status: {
     released: { en: "Released", zh: "已发布" },

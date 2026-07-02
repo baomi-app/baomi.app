@@ -23,10 +23,10 @@ export function RepoStats({
 
   return (
     <div
-      className={`flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-white/40 ${className}`}
+      className={`flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-[var(--ink-muted)] ${className}`}
     >
       {meta.version && (
-        <span className="rounded-md border border-white/10 bg-white/[0.04] px-1.5 py-0.5 text-white/55">
+        <span className="rounded-md border border-[var(--rule)] bg-white px-1.5 py-0.5 text-[var(--foreground)]">
           {meta.version}
         </span>
       )}

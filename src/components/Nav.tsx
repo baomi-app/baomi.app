@@ -8,15 +8,15 @@ import { ui, useLocale } from "@/i18n";
 export function Nav() {
   const { t } = useLocale();
   return (
-    <header className="sticky top-0 z-50 border-b border-white/5 bg-background/70 backdrop-blur-xl">
-      <nav className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
-        <Link href="/" className="transition-opacity hover:opacity-80">
+    <header className="sticky top-0 z-50 border-b border-[var(--rule)] bg-[rgba(238,245,241,0.86)] backdrop-blur-xl">
+      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+        <Link href="/" className="transition-opacity hover:opacity-75">
           <Logo />
         </Link>
-        <div className="flex items-center gap-4 text-sm text-white/60 sm:gap-6">
+        <div className="flex items-center gap-3 text-sm font-medium text-[var(--ink-muted)] sm:gap-5">
           <Link
             href="/#apps"
-            className="hidden transition-colors hover:text-white sm:inline"
+            className="hidden rounded-md px-2 py-1 transition-colors hover:text-[var(--foreground)] sm:inline"
           >
             {t(ui.nav.apps)}
           </Link>
@@ -24,7 +24,7 @@ export function Nav() {
             href="https://github.com/baomi-app"
             target="_blank"
             rel="noreferrer"
-            className="transition-colors hover:text-white"
+            className="rounded-md px-2 py-1 transition-colors hover:text-[var(--foreground)]"
           >
             GitHub
           </a>

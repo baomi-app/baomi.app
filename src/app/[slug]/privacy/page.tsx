@@ -103,13 +103,13 @@ function PrivacyArticle({
 
   return (
     <article className="select-text">
-      <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-white/40">
+      <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[var(--tomato)]">
         {isEnglish ? "Privacy Policy" : "隐私政策"}
       </p>
-      <h1 className="border-b border-white/10 pb-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+      <h1 className="border-b border-[var(--foreground)] pb-4 font-display text-4xl font-semibold tracking-normal text-[var(--foreground)] sm:text-5xl">
         {heading}
       </h1>
-      <p className="mt-4 text-xs text-white/40">
+      <p className="mt-4 font-mono text-xs text-[var(--ink-muted)]">
         {isEnglish ? "Last Updated: " : "最近更新："}
         {updated}
       </p>
@@ -128,14 +128,14 @@ export default async function AppPrivacyPage({ params }: PrivacyPageProps) {
     <>
       <Nav />
       <main className="flex-1">
-        <section className="mx-auto max-w-3xl px-6 py-16 text-white/80 sm:py-20">
+        <section className="mx-auto max-w-3xl px-6 py-16 text-[var(--ink-muted)] sm:py-20">
           <PrivacyArticle
             body={privacy.body.en}
             heading={privacy.title.en}
             locale="en"
             updated={privacy.updated.en}
           />
-          <hr className="my-12 border-white/10" />
+          <hr className="my-12 border-[var(--rule)]" />
           <PrivacyArticle
             body={privacy.body.zh}
             heading={privacy.title.zh}

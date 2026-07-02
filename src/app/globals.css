@@ -1,11 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0b;
-  --foreground: #ededed;
-  --font-geist-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --background: #eef5f1;
+  --foreground: #17201b;
+  --surface: #fbfdf8;
+  --surface-strong: #ffffff;
+  --ink-muted: #5d6c62;
+  --rule: #c7d6cc;
+  --teal: #0b6b63;
+  --saffron: #f0b429;
+  --tomato: #e15434;
+  --blue: #3867d6;
+  --font-geist-sans: "Avenir Next", Avenir, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-geist-mono: "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
-  --font-space-grotesk: var(--font-geist-sans);
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Songti SC", serif;
+  --font-space-grotesk: var(--font-display);
   --font-sora: var(--font-geist-sans);
   --font-poppins: var(--font-geist-sans);
 }
@@ -18,6 +27,7 @@
   --font-space: var(--font-space-grotesk);
   --font-sora: var(--font-sora);
   --font-poppins: var(--font-poppins);
+  --font-display: var(--font-display);
 }
 
 html {
@@ -25,31 +35,29 @@ html {
 }
 
 body {
-  background: var(--background);
+  background:
+    linear-gradient(90deg, rgba(23, 32, 27, 0.035) 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(rgba(23, 32, 27, 0.03) 1px, transparent 1px) 0 0 / 32px 32px,
+    var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Animated grain-free aurora used behind the hero */
-@keyframes float-slow {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  50% {
-    transform: translate3d(0, -24px, 0) scale(1.08);
-  }
+::selection {
+  background: var(--saffron);
+  color: var(--foreground);
 }
 
-.animate-float-slow {
-  animation: float-slow 14s ease-in-out infinite;
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
 }
 
-@keyframes pop-in {
+@keyframes label-in {
   0% {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(10px) rotate(-0.6deg);
   }
   100% {
     opacity: 1;
@@ -57,8 +65,8 @@ body {
   }
 }
 
-.animate-pop-in {
-  animation: pop-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+.animate-label-in {
+  animation: label-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes fade-in {
@@ -77,4 +85,26 @@ body {
 
 .animate-scale-up {
   animation: scale-up 0.25s cubic-bezier(0.34, 1.3, 0.64, 1) forwards;
+}
+
+.label-cut {
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%);
+}
+
+.tool-ledger {
+  background:
+    linear-gradient(90deg, rgba(11, 107, 99, 0.11) 1px, transparent 1px) 0 0 / 18px 18px,
+    linear-gradient(rgba(11, 107, 99, 0.09) 1px, transparent 1px) 0 0 / 18px 18px,
+    var(--surface);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
