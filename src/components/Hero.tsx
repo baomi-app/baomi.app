@@ -6,11 +6,10 @@ import { ui, useLocale } from "@/i18n";
 
 export function Hero({ views }: { views: AppView[] }) {
   const { t } = useLocale();
-  const featured = views.slice(0, 5);
 
   return (
     <section className="relative overflow-hidden border-b border-[var(--rule)]">
-      <div className="mx-auto grid max-w-6xl gap-10 px-6 pt-20 pb-16 sm:pt-28 sm:pb-20 lg:grid-cols-[1.02fr_0.98fr] lg:items-end">
+      <div className="mx-auto grid max-w-6xl gap-10 px-6 pt-12 pb-14 sm:pt-16 sm:pb-16 lg:grid-cols-[1.02fr_0.98fr] lg:items-end">
         <div>
           <span className="animate-label-in label-cut inline-flex items-center gap-2 bg-[var(--saffron)] px-3.5 py-1.5 pr-6 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--foreground)] shadow-[4px_4px_0_var(--foreground)]">
             <span className="h-2 w-2 bg-[var(--tomato)]" />
@@ -56,14 +55,14 @@ export function Hero({ views }: { views: AppView[] }) {
             </p>
           </div>
 
-          <div className="mt-3 space-y-2">
-            {featured.length === 0 && (
+          <div className="mt-3 max-h-[26rem] space-y-2 overflow-y-auto pr-1">
+            {views.length === 0 && (
               <div className="border border-dashed border-[var(--rule)] bg-[var(--surface-strong)] px-4 py-8 text-sm text-[var(--ink-muted)]">
                 {t(ui.hero.catalogEmpty)}
               </div>
             )}
 
-            {featured.map((app, index) => (
+            {views.map((app, index) => (
               <a
                 key={app.id}
                 href={`/${app.id}`}
