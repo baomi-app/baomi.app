@@ -24,6 +24,7 @@ export const ui = {
   },
   nav: {
     apps: { en: "Apps", zh: "应用" },
+    tools: { en: "Tools", zh: "工具" },
   },
   hero: {
     badge: { en: "Small tools, kept sharp", zh: "小工具，保持锋利" },
@@ -50,6 +51,24 @@ export const ui = {
     },
     count: { en: "apps", zh: "个应用" },
     viewDetails: { en: "View details", zh: "查看详情" },
+  },
+  tools: {
+    eyebrow: { en: "Tools", zh: "工具" },
+    heading: { en: "Small web tools for config and workflow chores.", zh: "处理配置和流程琐事的小型网页工具。" },
+    sub: {
+      en: "Browser-side utilities that keep secrets local and produce copy-ready output.",
+      zh: "在浏览器本地运行的小工具，敏感配置不出本机，结果可以直接复制使用。",
+    },
+    count: { en: "tools", zh: "个工具" },
+    open: { en: "Open tool", zh: "打开工具" },
+    hy2: {
+      name: { en: "HY2 config converter", zh: "HY2 配置转换工具" },
+      tagline: {
+        en: "Generate Clash profiles from Hysteria 2 server configs, then turn Clash HY2 nodes into Shadowrocket links.",
+        zh: "根据 Hysteria 2 服务端配置生成 Clash 配置，再把 Clash HY2 节点转换成 Shadowrocket 链接。",
+      },
+      platform: { en: "Web utility", zh: "网页工具" },
+    },
   },
   detail: {
     back: { en: "All apps", zh: "全部应用" },

@@ -20,6 +20,12 @@ export function Nav() {
           >
             {t(ui.nav.apps)}
           </Link>
+          <Link
+            href="/tools"
+            className="rounded-md px-2 py-1 transition-colors hover:text-[var(--foreground)]"
+          >
+            {t(ui.nav.tools)}
+          </Link>
           <a
             href="https://github.com/baomi-app"
             target="_blank"
