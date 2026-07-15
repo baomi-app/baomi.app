@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "baomi — small, sharp apps that do one thing well";
+export const alt = "baomi | independent apps and tools";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -14,23 +14,21 @@ export default function OpengraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#0a0a0b",
+          background: "#f7faf7",
           padding: "80px",
           fontFamily: "sans-serif",
         }}
       >
-        {/* glow */}
+        {/* brand color field */}
         <div
           style={{
             position: "absolute",
-            top: -160,
-            right: -120,
-            width: 520,
-            height: 520,
+            top: -180,
+            right: -140,
+            width: 560,
+            height: 560,
             borderRadius: "9999px",
-            background: "#f97316",
-            opacity: 0.25,
-            filter: "blur(120px)",
+            background: "#4ade80",
             display: "flex",
           }}
         />
@@ -68,7 +66,7 @@ export default function OpengraphImage() {
             />
             </g>
           </svg>
-          <div style={{ display: "flex", fontSize: 64, fontWeight: 800, color: "#fff" }}>
+          <div style={{ display: "flex", fontSize: 64, fontWeight: 800, color: "#172019" }}>
             baomi.
             <span style={{ color: "#fbbf24" }}>app</span>
           </div>
@@ -83,14 +81,14 @@ export default function OpengraphImage() {
               fontSize: 84,
               fontWeight: 700,
               lineHeight: 1.05,
-              color: "#fff",
+              color: "#172019",
               maxWidth: 980,
             }}
           >
-            Small, sharp apps that do one thing well.
+            Apps and tools for everyday tasks.
           </div>
-          <div style={{ display: "flex", fontSize: 34, color: "rgba(255,255,255,0.55)" }}>
-            Small tools by baomi — baomi.app
+          <div style={{ display: "flex", fontSize: 34, color: "#59665c" }}>
+            Independent apps and tools | baomi.app
           </div>
         </div>
       </div>

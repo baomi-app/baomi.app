@@ -245,6 +245,7 @@ export async function getRepoMeta(repo: string): Promise<RepoMeta | null> {
 export async function getAppContent(
   config: AppConfig
 ): Promise<AppContent | null> {
+  if (config.content) return config.content;
   const file = config.contentFile ?? "baomi.json";
   const content = await fetchRepoRaw(config, file, "json");
 

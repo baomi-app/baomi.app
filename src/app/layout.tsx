@@ -1,32 +1,36 @@
 import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
 import { LocaleProvider } from "@/i18n";
 import "./globals.css";
+
+const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
+const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono-next" });
 
 const siteUrl = "https://baomi.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "baomi.app — small, sharp apps",
-    template: "%s · baomi.app",
+    default: "baomi.app | independent apps and tools",
+    template: "%s | baomi.app",
   },
   description:
-    "Small tools by baomi — fast, focused, and a pleasure to use. Each app does one thing well.",
+    "Independent apps and browser tools for macOS, iOS, and the web.",
   keywords: ["baomi", "apps", "macOS", "tools", "open source"],
   authors: [{ name: "baomi" }],
   openGraph: {
     type: "website",
     url: siteUrl,
-    title: "baomi.app — small, sharp apps",
+    title: "baomi.app | independent apps and tools",
     description:
-      "Small tools by baomi — fast, focused, and a pleasure to use. Each app does one thing well.",
+      "Independent apps and browser tools for macOS, iOS, and the web.",
     siteName: "baomi.app",
   },
   twitter: {
     card: "summary_large_image",
-    title: "baomi.app — small, sharp apps",
+    title: "baomi.app | independent apps and tools",
     description:
-      "Small tools by baomi — fast, focused, and a pleasure to use. Each app does one thing well.",
+      "Independent apps and browser tools for macOS, iOS, and the web.",
   },
 };
 
@@ -36,7 +40,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en" className={`${geist.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <LocaleProvider>{children}</LocaleProvider>
       </body>

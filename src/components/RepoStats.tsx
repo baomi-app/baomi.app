@@ -26,7 +26,7 @@ export function RepoStats({
       className={`flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-[var(--ink-muted)] ${className}`}
     >
       {meta.version && (
-        <span className="rounded-md border border-[var(--rule)] bg-white px-1.5 py-0.5 text-[var(--foreground)]">
+        <span className="rounded-lg border border-[var(--rule)] bg-[var(--surface-strong)] px-1.5 py-0.5 text-[var(--foreground)]">
           {meta.version}
         </span>
       )}

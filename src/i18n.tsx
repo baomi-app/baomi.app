@@ -20,44 +20,44 @@ const STORAGE_KEY = "baomi.locale";
 export const ui = {
   brand: {
     // baomi's own studio tagline. (Pop's "咔，一爆即得" slogan lives on Pop.)
-    tagline: { en: "Focused on one, subtle yet extraordinary.", zh: "专注一事，微而不凡" },
+    tagline: { en: "Small apps for everyday tasks.", zh: "做一些日常用得上的小应用" },
   },
   nav: {
     apps: { en: "Apps", zh: "应用" },
     tools: { en: "Tools", zh: "工具" },
   },
   hero: {
-    badge: { en: "Small tools, kept sharp", zh: "小工具，保持锋利" },
+    badge: { en: "Independent apps and tools", zh: "独立应用和小工具" },
     // EN keeps a trailing space before the accent phrase; ZH has none. The Hero
     // joins them without inserting extra whitespace.
-    titleLead: { en: "Apps that stay small, ", zh: "把有用做快，" },
-    titleAccent: { en: "and get useful fast.", zh: "把复杂放轻。" },
+    titleLead: { en: "Useful apps, ", zh: "做点好用的，" },
+    titleAccent: { en: "without the extras.", zh: "也做得简单一点。" },
     subtitle: {
-      en: "baomi.app is a bench of focused utilities: native-feeling, easy to inspect, and finished before they become platforms.",
-      zh: "baomi.app 是一张轻量工具台：手感原生、边界清楚，在变成平台之前就把事情做完。",
+      en: "We make small apps for macOS, iOS, and the web. Each one solves a specific problem.",
+      zh: "我们为 macOS、iOS 和网页做一些小应用。每个应用解决一个具体问题。",
     },
-    ctaExplore: { en: "Browse the bench", zh: "浏览工具台" },
-    ctaGithub: { en: "View on GitHub", zh: "在 GitHub 查看" },
-    catalogLabel: { en: "Current bench", zh: "当前工具台" },
-    catalogMeta: { en: "Live app index", zh: "实时应用索引" },
-    catalogEmpty: { en: "Apps are loading", zh: "应用载入中" },
+    ctaExplore: { en: "See all apps", zh: "查看全部应用" },
+    ctaGithub: { en: "GitHub", zh: "GitHub" },
+    catalogLabel: { en: "Apps", zh: "应用" },
+    catalogMeta: { en: "Available now", zh: "当前可用" },
+    catalogEmpty: { en: "App information is loading.", zh: "正在加载应用信息。" },
   },
   apps: {
     eyebrow: { en: "The shelf", zh: "工具架" },
-    heading: { en: "Each app keeps a narrow promise.", zh: "每个应用只守住一个清楚承诺。" },
+    heading: { en: "Apps from baomi", zh: "baomi 的应用" },
     sub: {
-      en: "A small catalog of native utility apps and developer tools, pulled from each repository's bilingual baomi.json.",
-      zh: "一组原生工具和开发者小应用，内容来自各自仓库的双语 baomi.json。",
+      en: "Native apps and developer tools for the things we do often.",
+      zh: "一些原生应用和开发工具，用来处理经常遇到的事情。",
     },
     count: { en: "apps", zh: "个应用" },
     viewDetails: { en: "View details", zh: "查看详情" },
   },
   tools: {
     eyebrow: { en: "Tools", zh: "工具" },
-    heading: { en: "Small web tools for config and workflow chores.", zh: "处理配置和流程琐事的小型网页工具。" },
+    heading: { en: "Tools that run in your browser", zh: "直接在浏览器里用的工具" },
     sub: {
-      en: "Browser-side utilities that keep secrets local and produce copy-ready output.",
-      zh: "在浏览器本地运行的小工具，敏感配置不出本机，结果可以直接复制使用。",
+      en: "No account required. Your configuration stays in the browser.",
+      zh: "不需要账号，配置内容只在浏览器本地处理。",
     },
     count: { en: "tools", zh: "个工具" },
     open: { en: "Open tool", zh: "打开工具" },
@@ -72,6 +72,7 @@ export const ui = {
   },
   detail: {
     back: { en: "All apps", zh: "全部应用" },
+    about: { en: "About", zh: "关于" },
     features: { en: "Features", zh: "功能" },
     builtWith: { en: "Built with", zh: "技术栈" },
     screenshots: { en: "Screenshots", zh: "界面预览" },

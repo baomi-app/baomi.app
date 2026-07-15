@@ -1,22 +1,39 @@
 @import "tailwindcss";
 
 :root {
-  --background: #eef5f1;
-  --foreground: #17201b;
-  --surface: #fbfdf8;
+  --background: #f7faf7;
+  --foreground: #172019;
+  --surface: #edf4ee;
   --surface-strong: #ffffff;
-  --ink-muted: #5d6c62;
-  --rule: #c7d6cc;
-  --teal: #0b6b63;
-  --saffron: #f0b429;
-  --tomato: #e15434;
-  --blue: #3867d6;
-  --font-geist-sans: "Avenir Next", Avenir, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-geist-mono: "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
-  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Songti SC", serif;
-  --font-space-grotesk: var(--font-display);
-  --font-sora: var(--font-geist-sans);
-  --font-poppins: var(--font-geist-sans);
+  --ink-muted: #59665c;
+  --rule: #d2ddd4;
+  --brand-green: #4ade80;
+  --brand-yellow: #fbbf24;
+  --accent: #157a43;
+  --accent-soft: #dff8e8;
+  --on-accent: #f7fff9;
+  --teal: var(--accent);
+  --saffron: var(--brand-yellow);
+  --tomato: var(--accent);
+  --blue: var(--accent);
+  --font-geist-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-geist-mono: var(--font-geist-mono-next), ui-monospace, monospace;
+  --font-display: var(--font-geist-sans);
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #101612;
+    --foreground: #eff7f1;
+    --surface: #18221b;
+    --surface-strong: #1d2920;
+    --ink-muted: #a4b1a7;
+    --rule: #344239;
+    --accent: #4ade80;
+    --accent-soft: #173a24;
+    --on-accent: #102016;
+  }
 }
 
 @theme inline {
@@ -24,87 +41,40 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-space: var(--font-space-grotesk);
-  --font-sora: var(--font-sora);
-  --font-poppins: var(--font-poppins);
   --font-display: var(--font-display);
 }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
-  background:
-    linear-gradient(90deg, rgba(23, 32, 27, 0.035) 1px, transparent 1px) 0 0 / 32px 32px,
-    linear-gradient(rgba(23, 32, 27, 0.03) 1px, transparent 1px) 0 0 / 32px 32px,
-    var(--background);
+  background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans);
   -webkit-font-smoothing: antialiased;
 }
 
-::selection {
-  background: var(--saffron);
-  color: var(--foreground);
+::selection { background: var(--brand-yellow); color: #172019; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-:focus-visible {
-  outline: 2px solid var(--blue);
-  outline-offset: 3px;
-}
+.animate-rise-in { animation: rise-in .7s cubic-bezier(.16, 1, .3, 1) both; }
+.animate-rise-in-delayed { animation: rise-in .7s .12s cubic-bezier(.16, 1, .3, 1) both; }
 
-@keyframes label-in {
-  0% {
-    opacity: 0;
-    transform: translateY(10px) rotate(-0.6deg);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-label-in {
-  animation: label-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes scale-up {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.2s ease-out forwards;
-}
-
-.animate-scale-up {
-  animation: scale-up 0.25s cubic-bezier(0.34, 1.3, 0.64, 1) forwards;
-}
-
-.label-cut {
-  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%);
-}
-
-.tool-ledger {
-  background:
-    linear-gradient(90deg, rgba(11, 107, 99, 0.11) 1px, transparent 1px) 0 0 / 18px 18px,
-    linear-gradient(rgba(11, 107, 99, 0.09) 1px, transparent 1px) 0 0 / 18px 18px,
-    var(--surface);
-}
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scale-up { from { transform: scale(.97); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.animate-fade-in { animation: fade-in .2s ease-out forwards; }
+.animate-scale-up { animation: scale-up .25s cubic-bezier(.34, 1.3, .64, 1) forwards; }
+.label-cut { clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%); }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  ::before,
-  ::after {
-    animation-duration: 0.01ms !important;
+  *, ::before, ::after {
+    animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
+    transition-duration: .01ms !important;
   }
 }

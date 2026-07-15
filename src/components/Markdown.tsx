@@ -90,7 +90,7 @@ function parseInline(text: string): React.ReactNode[] {
       return (
         <code
           key={index}
-          className="rounded bg-white px-1.5 py-0.5 font-mono text-sm text-[var(--foreground)] border border-[var(--rule)]"
+          className="rounded-lg border border-[var(--rule)] bg-[var(--surface-strong)] px-1.5 py-0.5 font-mono text-sm text-[var(--foreground)]"
         >
           {part.slice(1, -1)}
         </code>
@@ -105,7 +105,7 @@ function parseInline(text: string): React.ReactNode[] {
             href={match[2]}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[var(--teal)] underline underline-offset-4 decoration-[rgba(11,107,99,0.35)] transition-colors hover:decoration-[var(--teal)]"
+            className="text-[var(--accent)] underline decoration-[var(--rule)] underline-offset-4 transition-colors hover:decoration-[var(--accent)]"
           >
             {match[1]}
           </a>

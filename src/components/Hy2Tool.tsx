@@ -13,6 +13,7 @@ type ParsedHy2Server = {
   password: string;
   obfsPassword?: string;
   sni?: string;
+  skipCertVerify: boolean;
   warnings: string[];
 };
 
@@ -83,6 +84,12 @@ const text = {
   serverPanel: { en: "HY2 server to Clash", zh: "HY2 服务端转 Clash" },
   clashPanel: { en: "Clash to Shadowrocket", zh: "Clash 转 Shadowrocket" },
   routing: { en: "Routing rules", zh: "分流规则" },
+  publicHost: { en: "Public server address", zh: "服务器公网地址" },
+  publicHostPlaceholder: { en: "Server domain or public IP", zh: "服务器域名或公网 IP" },
+  publicHostHelp: {
+    en: "Enter the domain or public IP used by clients. Do not include a protocol or port.",
+    zh: "填写客户端连接时使用的域名或公网 IP，不要包含协议和端口。",
+  },
   hy2Input: { en: "HY2 server config", zh: "HY2 服务端配置" },
   clashInput: { en: "Clash config", zh: "Clash 配置" },
   clashOutput: { en: "Generated Clash config", zh: "生成的 Clash 配置" },
@@ -113,6 +120,10 @@ const text = {
   inferredPlaceholder: {
     en: "No public host was found; replace REPLACE_WITH_SERVER_HOST in the output.",
     zh: "未从配置中找到公网域名；请替换输出里的 REPLACE_WITH_SERVER_HOST。",
+  },
+  missingSni: {
+    en: "The server address is an IP. Enter the certificate domain as SNI if TLS verification is enabled.",
+    zh: "服务器地址是 IP；如果启用了 TLS 证书验证，请填写证书域名作为 SNI。",
   },
   missingProxy: { en: "No hysteria2 proxies were found.", zh: "未找到 hysteria2 节点。" },
 } satisfies Record<string, L>;
@@ -330,6 +341,32 @@ function normalizeHost(host: string | undefined): string | undefined {
   return trimmed;
 }
 
+function normalizePublicHostInput(value: string | undefined): string | undefined {
+  if (!value?.trim()) return undefined;
+  const trimmed = value.trim();
+  try {
+    const url = new URL(trimmed.includes("://") ? trimmed : `//${trimmed}`, "https://hy2.local");
+    return normalizeHost(url.hostname);
+  } catch {
+    return normalizeHost(trimmed);
+  }
+}
+
+function hostnameFromUrl(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  try {
+    return normalizeHost(new URL(value).hostname);
+  } catch {
+    return undefined;
+  }
+}
+
+function isIpHost(host: string): boolean {
+  if (host.includes(":")) return true;
+  const parts = host.split(".");
+  return parts.length === 4 && parts.every((part) => /^\d{1,3}$/.test(part) && Number(part) <= 255);
+}
+
 function firstString(root: unknown, paths: string[][]): string | undefined {
   for (const path of paths) {
     const value = asString(getPath(root, path));
@@ -362,7 +399,7 @@ function inferPublicHost(parsed: unknown, listenHost?: string, sni?: string): st
   );
 }
 
-function parseHy2ServerConfig(input: string): ParsedHy2Server {
+function parseHy2ServerConfig(input: string, publicHostInput?: string): ParsedHy2Server {
   const parsed = parseConfig(input);
   const listen = asString(getPath(parsed, ["listen"]));
   const parsedListen = parseListen(listen);
@@ -374,15 +411,29 @@ function parseHy2ServerConfig(input: string): ParsedHy2Server {
   const obfsPassword =
     asString(getPath(parsed, ["obfs", "salamander", "password"])) ??
     asString(getPath(parsed, ["obfs", "password"]));
-  const sni =
+  const configuredSni =
     asString(getPath(parsed, ["tls", "sni"])) ??
     asString(getPath(parsed, ["tls", "serverName"]));
-  const host = inferPublicHost(parsed, parsedListen.host, sni);
+  const host = normalizePublicHostInput(publicHostInput) ?? inferPublicHost(parsed, parsedListen.host, configuredSni);
+  const configuredSniHost = normalizePublicHostInput(configuredSni);
+  const masqueradeSni = hostnameFromUrl(
+    asString(getPath(parsed, ["masquerade", "proxy", "url"])),
+  );
+  const automaticMasqueradeSni =
+    host !== "REPLACE_WITH_SERVER_HOST" && isIpHost(host) && !configuredSniHost
+      ? masqueradeSni
+      : undefined;
+  const sni = configuredSniHost ?? automaticMasqueradeSni ??
+    (host !== "REPLACE_WITH_SERVER_HOST" && !isIpHost(host) ? host : undefined);
+  const skipCertVerify = Boolean(
+    masqueradeSni && sni === masqueradeSni && !configuredSniHost,
+  );
   const warnings: string[] = [];
 
   if (!listen) warnings.push("listen");
   if (!password) warnings.push("password");
   if (host === "REPLACE_WITH_SERVER_HOST") warnings.push("host");
+  if (host !== "REPLACE_WITH_SERVER_HOST" && isIpHost(host) && !sni) warnings.push("sni");
 
   return {
     host,
@@ -390,7 +441,8 @@ function parseHy2ServerConfig(input: string): ParsedHy2Server {
     port: parsedListen.port,
     password,
     obfsPassword,
-    sni: sni ?? (host === "REPLACE_WITH_SERVER_HOST" ? undefined : host),
+    sni,
+    skipCertVerify,
     warnings,
   };
 }
@@ -417,7 +469,7 @@ function generateClashConfig({
     `    server: ${quoteYaml(server.host)}`,
     `    port: ${server.port}`,
     `    password: ${quoteYaml(server.password)}`,
-    "    skip-cert-verify: false",
+    `    skip-cert-verify: ${server.skipCertVerify}`,
     "    alpn:",
     "      - h3",
   ];
@@ -518,6 +570,7 @@ function CopyButton({ value, label, copiedLabel }: { value: string; label: strin
 export function Hy2Tool() {
   const { t } = useLocale();
   const [routingMode, setRoutingMode] = useState<RoutingMode>("china-direct");
+  const [publicHost, setPublicHost] = useState("");
   const [hy2Input, setHy2Input] = useState(sampleHy2Server);
   const [clashInput, setClashInput] = useState(sampleClash);
 
@@ -526,9 +579,10 @@ export function Hy2Tool() {
     const messages: string[] = [];
 
     try {
-      const parsed = parseHy2ServerConfig(hy2Input);
+      const parsed = parseHy2ServerConfig(hy2Input, publicHost);
       if (!parsed.password) messages.push(t(text.missingPassword));
       if (parsed.warnings.includes("host")) messages.push(t(text.inferredPlaceholder));
+      if (parsed.warnings.includes("sni")) messages.push(t(text.missingSni));
       if (parsed.warnings.includes("listen")) {
         messages.push(t({ en: "No listen port was found; using 443.", zh: "未找到 listen 端口，已使用 443。" }));
       }
@@ -543,7 +597,7 @@ export function Hy2Tool() {
     } catch {
       return { output: "", messages: [t(text.error)] };
     }
-  }, [hy2Input, routingMode, t]);
+  }, [hy2Input, publicHost, routingMode, t]);
 
   const shadowrocketResult = useMemo(() => {
     if (!clashInput.trim()) return { output: "", messages: [] as string[] };
@@ -603,6 +657,22 @@ export function Hy2Tool() {
                 </button>
               </div>
             </div>
+
+            <label className="mt-4 block text-sm font-semibold text-[var(--foreground)]">
+              {t(text.publicHost)}
+              <input
+                type="text"
+                value={publicHost}
+                onChange={(event) => setPublicHost(event.target.value)}
+                placeholder={t(text.publicHostPlaceholder)}
+                autoComplete="off"
+                spellCheck={false}
+                className="mt-2 h-11 w-full rounded-md border border-[var(--rule)] bg-white px-3 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--ink-muted)] focus:border-[var(--foreground)]"
+              />
+              <span className="mt-1.5 block text-xs font-normal leading-5 text-[var(--ink-muted)]">
+                {t(text.publicHostHelp)}
+              </span>
+            </label>
 
             <div className="mt-4">
               <p className="text-sm font-semibold text-[var(--foreground)]">

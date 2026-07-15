@@ -26,7 +26,7 @@ export async function generateMetadata({
     title: content.name,
     description: content.tagline.en,
     openGraph: {
-      title: `${content.name} — baomi`,
+      title: `${content.name} | baomi`,
       description: content.tagline.en,
     },
   };

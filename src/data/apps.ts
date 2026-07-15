@@ -52,6 +52,8 @@ export type AppConfig = {
   repo: string; // "owner/name" on GitHub
   branch?: string; // default "main"
   contentFile?: string; // default "baomi.json"
+  /** Bilingual fallback for legacy repositories that do not have baomi.json yet. */
+  content?: AppContent;
 };
 
 export const apps: AppConfig[] = [
@@ -61,6 +63,43 @@ export const apps: AppConfig[] = [
   { id: "rss", repo: "people-s-organization/people-s-rss" },
   { id: "codex-provider-bridge", repo: "people-s-organization/codex-provider-bridge" },
   { id: "forge-next", repo: "baomi-app/forge-next" },
+  {
+    id: "porter",
+    repo: "arjenzhou/porter",
+    branch: "master",
+    content: {
+      name: "Porter",
+      status: "released",
+      accent: { from: "#4ade80", to: "#fbbf24" },
+      platform: { en: "Java 11+ library", zh: "Java 11+ 类库" },
+      tagline: {
+        en: "An open-source framework for moving data between different sources and destinations.",
+        zh: "在不同数据源和目标之间传输数据的开源框架。",
+      },
+      description: {
+        en: "Porter is a Java data-transmission framework with JDBC and HTTP clients, an extension SPI, and pluggable data-source modules.",
+        zh: "Porter 是一个 Java 数据传输框架，支持 JDBC 和 HTTP 客户端，并提供扩展 SPI 和可插拔数据源模块。",
+      },
+      features: {
+        en: [
+          "JDBC and HTTP clients",
+          "Extension points through Porter SPI",
+          "Pluggable data-source modules",
+        ],
+        zh: [
+          "支持 JDBC 和 HTTP 客户端",
+          "通过 Porter SPI 扩展能力",
+          "可插拔的数据源模块",
+        ],
+      },
+      links: [
+        {
+          label: { en: "GitHub repository", zh: "GitHub 仓库" },
+          href: "https://github.com/arjenzhou/porter",
+        },
+      ],
+    },
+  },
 ];
 
 

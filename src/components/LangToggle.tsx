@@ -10,7 +10,7 @@ const labels: Record<Locale, string> = {
 export function LangToggle() {
   const { locale, setLocale } = useLocale();
   return (
-    <div className="flex items-center rounded-md border border-[var(--rule)] bg-[var(--surface)] p-0.5 text-xs font-semibold">
+    <div className="flex items-center rounded-[14px] border border-[var(--rule)] bg-[var(--surface)] p-0.5 text-xs font-semibold">
       {(Object.keys(labels) as Locale[]).map((l) => (
         <button
           key={l}
@@ -19,8 +19,8 @@ export function LangToggle() {
           aria-pressed={locale === l}
           className={
             locale === l
-              ? "rounded-sm bg-[var(--foreground)] px-2.5 py-1 text-white"
-              : "rounded-sm px-2.5 py-1 text-[var(--ink-muted)] transition-colors hover:text-[var(--foreground)]"
+              ? "rounded-[10px] bg-[var(--foreground)] px-2.5 py-1 text-[var(--background)]"
+              : "rounded-[10px] px-2.5 py-1 text-[var(--ink-muted)] transition-colors hover:text-[var(--foreground)]"
           }
         >
           {labels[l]}
