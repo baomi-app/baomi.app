@@ -39,7 +39,24 @@ export function Hero({ views }: { views: AppView[] }) {
                 role="tab"
                 aria-selected={app.id === active.id}
                 aria-controls="featured-app"
+                tabIndex={app.id === active.id ? 0 : -1}
                 onClick={() => setActiveId(app.id)}
+                onKeyDown={(event) => {
+                  const keyTargets: Record<string, number> = {
+                    ArrowDown: (index + 1) % views.length,
+                    ArrowRight: (index + 1) % views.length,
+                    ArrowUp: (index - 1 + views.length) % views.length,
+                    ArrowLeft: (index - 1 + views.length) % views.length,
+                    Home: 0,
+                    End: views.length - 1,
+                  };
+                  const targetIndex = keyTargets[event.key];
+                  if (targetIndex === undefined) return;
+                  event.preventDefault();
+                  setActiveId(views[targetIndex].id);
+                  const tabs = event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>("[role='tab']");
+                  requestAnimationFrame(() => tabs?.[targetIndex]?.focus());
+                }}
                 className="stage-tab"
               >
                 <span className="stage-tab-index">{(index + 1).toString().padStart(2, "0")}</span>
