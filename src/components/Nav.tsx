@@ -13,16 +13,15 @@ export function Nav() {
   const toolsActive = pathname.startsWith("/tools");
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[color:var(--rule)]/80 bg-[color:var(--background)]/90 backdrop-blur-xl">
-      <nav className="site-frame flex h-16 items-center justify-between" aria-label="Main navigation">
-        <Link href="/" className="rounded-lg" aria-label="baomi.app home"><Logo /></Link>
-        <div className="flex items-center gap-0.5 text-sm font-medium">
-          <Link href="/#apps" className="nav-link nav-apps" aria-current={!toolsActive && pathname !== "/" ? "page" : undefined}>{t(ui.nav.apps)}</Link>
-          <Link href="/tools" className="nav-link" aria-current={toolsActive ? "page" : undefined}>{t(ui.nav.tools)}</Link>
-          <a href="https://github.com/baomi-app" target="_blank" rel="noreferrer" className="nav-link nav-github">GitHub ↗</a>
-          <ThemeToggle />
-          <LangToggle />
+    <header className="site-nav-wrap">
+      <nav className="site-frame site-nav" aria-label="Main navigation">
+        <Link href="/" className="site-nav-logo" aria-label="baomi.app home"><Logo /></Link>
+        <div className="site-nav-center">
+          <Link href="/#apps" className="site-nav-link nav-apps" aria-current={!toolsActive && pathname !== "/" ? "page" : undefined}>{t(ui.nav.apps)}</Link>
+          <Link href="/tools" className="site-nav-link" aria-current={toolsActive ? "page" : undefined}>{t(ui.nav.tools)}</Link>
+          <a href="https://github.com/baomi-app" target="_blank" rel="noreferrer" className="site-nav-link nav-github">GitHub ↗</a>
         </div>
+        <div className="site-nav-controls"><ThemeToggle /><LangToggle /></div>
       </nav>
     </header>
   );

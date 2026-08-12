@@ -4,29 +4,32 @@ import Link from "next/link";
 import { ui, useLocale } from "@/i18n";
 
 export function ToolsSection({ standalone = false }: { standalone?: boolean }) {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
 
   return (
-    <section id="tools" className={standalone ? "" : "border-t border-[var(--rule)]"}>
-      <div className={`site-frame ${standalone ? "py-20 sm:py-28" : "py-20 sm:py-24"}`}>
-        <div className="mb-10 max-w-2xl sm:mb-12">
-          <p className="section-kicker">01 {t(ui.tools.count)}</p>
-          <h1 className={`${standalone ? "text-4xl sm:text-6xl" : "text-3xl sm:text-4xl"} mt-3 font-semibold tracking-[-.045em]`}>
-            {t(ui.tools.heading)}
-          </h1>
-          {standalone && <p className="mt-5 max-w-[42ch] text-base leading-7 text-[var(--ink-muted)]">{t(ui.tools.sub)}</p>}
+    <section id="tools" className={`tools-stage ${standalone ? "tools-stage-standalone" : ""}`}>
+      <div className="site-frame tools-stage-grid">
+        <div className="tools-stage-intro">
+          <div className="tools-stage-index"><span>01</span><i /></div>
+          <h1>{locale === "zh" ? <>浏览器<br />工具</> : t(ui.tools.heading)}</h1>
+          <p>{t(ui.tools.sub)}</p>
         </div>
 
-        <Link href="/tools/hy2" className="tool-index-row group">
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[.12em] text-[var(--ink-muted)]">{t(ui.tools.hy2.platform)}</p>
-            <h2 className="mt-2 text-xl font-semibold tracking-[-.03em] sm:text-2xl">{t(ui.tools.hy2.name)}</h2>
+        <Link href="/tools/hy2" className="tool-machine">
+          <div className="tool-machine-top">
+            <span>{t(ui.tools.hy2.platform)}</span>
+            <span className="machine-status"><i /> LOCAL</span>
           </div>
-          <p className="tool-index-description max-w-[52ch] text-sm leading-6 text-[var(--ink-muted)] sm:text-[15px] sm:leading-7">{t(ui.tools.hy2.tagline)}</p>
-          <div className="tool-flow flex items-center gap-2 text-xs" aria-hidden="true">
-            <span>HY2</span><b>→</b><span>Clash</span><b>→</b><span>Shadowrocket</span><b className="ml-2 transition-transform group-hover:translate-x-1">↗</b>
+          <div className="tool-machine-flow" aria-hidden="true">
+            <span>HY2</span><b>→</b><span>Clash</span><b>→</b><span>Shadowrocket</span>
           </div>
-          <span className="sr-only">{t(ui.tools.open)}</span>
+          <div className="tool-machine-copy">
+            <h2>{t(ui.tools.hy2.name)}</h2>
+            <p>{t(ui.tools.hy2.tagline)}</p>
+          </div>
+          <div className="tool-machine-open">
+            <span>{t(ui.tools.open)}</span><span aria-hidden="true">↗</span>
+          </div>
         </Link>
       </div>
     </section>

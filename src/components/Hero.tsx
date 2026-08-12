@@ -1,46 +1,95 @@
 "use client";
 
+import type { CSSProperties } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { AppIcon } from "@/components/AppIcon";
+import { RepoStats } from "@/components/RepoStats";
 import type { AppView } from "@/data/github";
 import { ui, useLocale } from "@/i18n";
 
 export function Hero({ views }: { views: AppView[] }) {
-  const { locale, t } = useLocale();
+  const { t } = useLocale();
+  const initialId = views.find((view) => view.screenshotUrls.length > 0)?.id ?? views[0]?.id ?? "";
+  const [activeId, setActiveId] = useState(initialId);
+  const activeIndex = Math.max(0, views.findIndex((view) => view.id === activeId));
+  const active = useMemo(() => views[activeIndex] ?? views[0], [activeIndex, views]);
+
+  if (!active) return null;
+
+  const style = {
+    "--stage-from": active.content.accent?.from ?? "#777b74",
+    "--stage-to": active.content.accent?.to ?? "#30332f",
+  } as CSSProperties;
 
   return (
-    <section className="site-frame grid gap-14 pb-20 pt-20 sm:pb-24 sm:pt-28 lg:grid-cols-[minmax(0,1.05fr)_minmax(25rem,.75fr)] lg:items-end lg:gap-20 lg:pt-36">
-      <div className="reveal max-w-3xl">
-        <p className="section-kicker">baomi.app</p>
-        <h1 className="mt-5 max-w-[13ch] font-display text-[clamp(3rem,7vw,5.75rem)] font-semibold leading-[.98] tracking-[-.055em]">
-          {locale === "zh" ? <>小应用，<br /><span className="whitespace-nowrap">做好一件事。</span></> : t(ui.hero.title)}
-        </h1>
-        <p className="mt-7 max-w-[46ch] text-base leading-7 text-[var(--ink-muted)] sm:text-lg sm:leading-8">
-          {t(ui.hero.subtitle)}
-        </p>
-        <div className="mt-8 flex flex-wrap items-center gap-5 text-sm font-semibold">
-          <a href="#apps" className="inline-flex min-h-11 items-center gap-2 text-[var(--foreground)] transition-colors hover:text-[var(--accent)]">
-            {t(ui.hero.ctaExplore)} <span aria-hidden="true">↓</span>
+    <section className="product-stage site-frame" style={style}>
+      <div className="product-stage-shell">
+        <aside className="product-stage-rail">
+          <div className="stage-rail-head">
+            <p>{t(ui.hero.title)}</p>
+            <span>{views.length.toString().padStart(2, "0")}</span>
+          </div>
+
+          <div className="stage-tabs" role="tablist" aria-label={t(ui.hero.catalogLabel)}>
+            {views.map((app, index) => (
+              <button
+                key={app.id}
+                type="button"
+                role="tab"
+                aria-selected={app.id === active.id}
+                aria-controls="featured-app"
+                onClick={() => setActiveId(app.id)}
+                className="stage-tab"
+              >
+                <span className="stage-tab-index">{(index + 1).toString().padStart(2, "0")}</span>
+                <AppIcon app={app} eager={index < 4} className="stage-tab-icon h-10 w-10 rounded-[10px] text-sm" />
+                <span className="stage-tab-name">{app.content.name}</span>
+              </button>
+            ))}
+          </div>
+
+          <a href="#apps" className="stage-rail-foot">
+            <span>{t(ui.hero.ctaExplore)}</span>
+            <span aria-hidden="true">↓</span>
           </a>
-          <a href="https://github.com/baomi-app" target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center gap-2 text-[var(--ink-muted)] transition-colors hover:text-[var(--foreground)]">
-            GitHub <span aria-hidden="true">↗</span>
-          </a>
+        </aside>
+
+        <div id="featured-app" role="tabpanel" className="product-stage-main">
+          <div key={`${active.id}-copy`} className="stage-copy stage-change">
+            <div className="stage-meta">
+              <span>{t(active.content.platform)}</span>
+              <span>{t(ui.status[active.content.status])}</span>
+            </div>
+            <h1>{active.content.name}</h1>
+            <p>{t(active.content.tagline)}</p>
+            <RepoStats meta={active.meta} className="stage-repo-stats" />
+            <Link href={`/${active.id}`} className="stage-open-link">
+              <span>{t(ui.apps.viewDetails)}</span>
+              <span aria-hidden="true">↗</span>
+            </Link>
+          </div>
+
+          <div key={`${active.id}-visual`} className="stage-visual stage-change" aria-live="polite">
+            <span className="stage-watermark" aria-hidden="true">{(activeIndex + 1).toString().padStart(2, "0")}</span>
+            <AppIcon app={active} eager className="stage-app-icon h-20 w-20 rounded-[20px] text-2xl sm:h-24 sm:w-24 sm:rounded-[24px]" />
+            {active.screenshotUrls[0] ? (
+              <div className="stage-screen">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={active.screenshotUrls[0]} alt={t(active.content.tagline)} loading="eager" fetchPriority="high" />
+              </div>
+            ) : (
+              <div className="stage-no-screen" aria-hidden="true">
+                <span>{active.content.name}</span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      <div className="reveal-delayed lg:pb-1">
-        <div className="mb-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-[.14em] text-[var(--ink-muted)]">
-          <span>{t(ui.hero.catalogLabel)}</span>
-          <span>{views.length.toString().padStart(2, "0")}</span>
-        </div>
-        <div className="app-launcher" aria-label={t(ui.hero.catalogLabel)}>
-          {views.map((app) => (
-            <Link key={app.id} href={`/${app.id}`} title={app.content.name} className="app-launcher-link rounded-xl">
-              <AppIcon app={app} eager className="h-14 w-14 rounded-[14px] text-xl sm:h-16 sm:w-16 sm:rounded-[16px]" />
-              <span className="sr-only">{app.content.name}</span>
-            </Link>
-          ))}
-        </div>
+      <div className="product-stage-caption">
+        <p>{t(ui.hero.subtitle)}</p>
+        <a href="https://github.com/baomi-app" target="_blank" rel="noreferrer">GitHub ↗</a>
       </div>
     </section>
   );

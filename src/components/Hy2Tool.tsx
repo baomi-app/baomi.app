@@ -613,7 +613,7 @@ export function Hy2Tool() {
   }, [clashInput, t]);
 
   return (
-    <section className="border-b border-[var(--rule)]">
+    <section className="hy2-workbench border-b border-[var(--rule)]">
       <div className="site-frame pb-24 pt-14 sm:pb-28 sm:pt-20">
         <header className="grid gap-8 border-b border-[var(--rule)] pb-12 sm:pb-14 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,.55fr)] lg:items-end lg:gap-16">
           <div>
