@@ -17,7 +17,7 @@ export function LangToggle() {
       onClick={() => setLocale(nextLocale)}
       aria-label={locale === "en" ? "切换到中文" : "Switch to English"}
       title={locale === "en" ? "切换到中文" : "Switch to English"}
-      className="ml-1 grid h-10 min-w-10 place-items-center rounded-full border border-[var(--rule)] bg-[var(--surface-strong)] px-3 font-mono text-xs font-semibold text-[var(--foreground)] transition-[transform,border-color,background-color] hover:-translate-y-0.5 hover:border-[var(--foreground)] active:translate-y-px"
+      className="icon-button ml-1 w-auto min-w-11 px-3 font-mono text-xs font-semibold"
     >
       {labels[nextLocale]}
     </button>

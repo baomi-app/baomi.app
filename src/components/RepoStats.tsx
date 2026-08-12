@@ -23,13 +23,9 @@ export function RepoStats({
 
   return (
     <div
-      className={`flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-[var(--ink-muted)] ${className}`}
+      className={`flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] text-[var(--ink-muted)] ${className}`}
     >
-      {meta.version && (
-        <span className="rounded-lg border border-[var(--rule)] bg-[var(--surface-strong)] px-1.5 py-0.5 text-[var(--foreground)]">
-          {meta.version}
-        </span>
-      )}
+      {meta.version && <span>{meta.version}</span>}
       <span className="inline-flex items-center gap-1">
         <svg viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor">
           <path d="M12 2l2.9 6.26 6.85.62-5.18 4.52 1.55 6.7L12 17.27 5.88 20.6l1.55-6.7L2.25 8.88l6.85-.62L12 2z" />
