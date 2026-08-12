@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { Footer } from "@/components/Footer";
-import { Markdown } from "@/components/Markdown";
+import { PrivacyDocument } from "@/components/PrivacyDocument";
 import { Nav } from "@/components/Nav";
 import { getConfig } from "@/data/apps";
 import { getAppContent, getRepoText } from "@/data/github";
@@ -88,36 +88,6 @@ export async function generateMetadata({
   };
 }
 
-function PrivacyArticle({
-  body,
-  heading,
-  locale,
-  updated,
-}: {
-  body: string;
-  heading: string;
-  locale: "en" | "zh";
-  updated: string;
-}) {
-  const isEnglish = locale === "en";
-
-  return (
-    <article className="select-text">
-      <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[var(--tomato)]">
-        {isEnglish ? "Privacy Policy" : "隐私政策"}
-      </p>
-      <h1 className="border-b border-[var(--foreground)] pb-4 font-display text-4xl font-semibold tracking-normal text-[var(--foreground)] sm:text-5xl">
-        {heading}
-      </h1>
-      <p className="mt-4 font-mono text-xs text-[var(--ink-muted)]">
-        {isEnglish ? "Last Updated: " : "最近更新："}
-        {updated}
-      </p>
-      <Markdown text={body} className="mt-8" />
-    </article>
-  );
-}
-
 export default async function AppPrivacyPage({ params }: PrivacyPageProps) {
   const { slug } = await params;
   const privacy = await getPrivacyView(slug);
@@ -128,21 +98,13 @@ export default async function AppPrivacyPage({ params }: PrivacyPageProps) {
     <>
       <Nav />
       <main className="flex-1">
-        <section className="mx-auto max-w-3xl px-6 py-16 text-[var(--ink-muted)] sm:py-20">
-          <PrivacyArticle
-            body={privacy.body.en}
-            heading={privacy.title.en}
-            locale="en"
-            updated={privacy.updated.en}
-          />
-          <hr className="my-12 border-[var(--rule)]" />
-          <PrivacyArticle
-            body={privacy.body.zh}
-            heading={privacy.title.zh}
-            locale="zh"
-            updated={privacy.updated.zh}
-          />
-        </section>
+        <PrivacyDocument
+          appSlug={slug}
+          appName={privacy.name}
+          title={privacy.title}
+          updated={privacy.updated}
+          body={privacy.body}
+        />
       </main>
       <Footer />
     </>

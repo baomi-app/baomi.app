@@ -8,9 +8,11 @@ import type { AppView } from "@/data/github";
 export function AppIcon({
   app,
   className = "",
+  eager = false,
 }: {
   app: AppView;
   className?: string;
+  eager?: boolean;
 }) {
   const [errored, setErrored] = useState(false);
 
@@ -20,9 +22,10 @@ export function AppIcon({
       <img
         src={app.iconUrl}
         alt={`${app.content.name} icon`}
-        loading="lazy"
+        loading={eager ? "eager" : "lazy"}
+        fetchPriority={eager ? "high" : "auto"}
         onError={() => setErrored(true)}
-        className={`rounded-lg object-cover shadow-sm ring-1 ring-black/10 ${className}`}
+        className={`object-cover shadow-[0_8px_24px_rgba(0,0,0,.10)] ring-1 ring-black/10 ${className}`}
       />
     );
   }
@@ -30,7 +33,7 @@ export function AppIcon({
   return (
     <span
       style={{ backgroundImage: accentGradient(app.content.accent) }}
-      className={`grid place-items-center rounded-lg font-semibold text-black shadow-sm ring-1 ring-black/10 ${className}`}
+      className={`grid place-items-center font-semibold text-white shadow-[0_8px_24px_rgba(0,0,0,.10)] ring-1 ring-black/10 ${className}`}
     >
       {app.content.name.charAt(0)}
     </span>

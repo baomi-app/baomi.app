@@ -14,7 +14,7 @@ export default function ToolsPage() {
     <>
       <Nav />
       <main className="flex-1">
-        <ToolsSection />
+        <ToolsSection standalone />
       </main>
       <Footer />
     </>

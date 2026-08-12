@@ -1,47 +1,112 @@
 "use client";
 
+import type { CSSProperties } from "react";
+import { useMemo, useState } from "react";
+import Link from "next/link";
 import { AppIcon } from "@/components/AppIcon";
+import { RepoStats } from "@/components/RepoStats";
 import type { AppView } from "@/data/github";
 import { ui, useLocale } from "@/i18n";
 
 export function Hero({ views }: { views: AppView[] }) {
   const { t } = useLocale();
-  return (
-    <section className="overflow-hidden border-b border-[var(--rule)]">
-      <div className="mx-auto grid min-h-[calc(88dvh-4rem)] max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 lg:grid-cols-[1fr_.82fr] lg:px-8 lg:py-20">
-        <div className="animate-rise-in max-w-xl">
-          <p className="text-sm font-semibold text-[var(--accent)]">{t(ui.hero.badge)}</p>
-          <h1 className="mt-5 text-balance font-display text-5xl font-semibold leading-[.98] tracking-[-.055em] sm:text-6xl lg:text-7xl">
-            {t(ui.hero.titleLead)}<span className="text-[var(--accent)] transition-colors duration-300 hover:text-[var(--brand-yellow)]">{t(ui.hero.titleAccent)}</span>
-          </h1>
-          <p className="mt-6 max-w-[46ch] text-base leading-7 text-[var(--ink-muted)] sm:text-lg">{t(ui.hero.subtitle)}</p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a href="#apps" className="inline-flex min-h-12 items-center justify-center whitespace-nowrap rounded-[14px] bg-[var(--accent)] px-5 text-sm font-semibold text-[var(--on-accent)] transition-[transform,background-color,color] duration-300 hover:-translate-y-0.5 hover:bg-[var(--brand-yellow)] hover:text-[#172019] active:translate-y-px">{t(ui.hero.ctaExplore)}</a>
-            <a href="https://github.com/baomi-app" target="_blank" rel="noreferrer" className="inline-flex min-h-12 items-center justify-center whitespace-nowrap rounded-[14px] px-3 text-sm font-semibold text-[var(--foreground)] transition-colors hover:text-[var(--accent)] active:translate-y-px">{t(ui.hero.ctaGithub)} <span className="ml-2">↗</span></a>
-          </div>
-        </div>
+  const initialId = views.find((view) => view.screenshotUrls.length > 0)?.id ?? views[0]?.id ?? "";
+  const [activeId, setActiveId] = useState(initialId);
+  const activeIndex = Math.max(0, views.findIndex((view) => view.id === activeId));
+  const active = useMemo(() => views[activeIndex] ?? views[0], [activeIndex, views]);
 
-        <div className="animate-rise-in-delayed overflow-hidden rounded-[14px] border border-[var(--rule)] bg-[var(--surface)] p-2">
-          <div className="flex items-center justify-between px-3 py-2 text-sm">
-            <span className="font-semibold text-[var(--foreground)]">{t(ui.hero.catalogLabel)}</span>
-            <span className="font-mono text-xs text-[var(--ink-muted)]">{views.length} {t(ui.apps.count)}</span>
+  if (!active) return null;
+
+  const style = {
+    "--stage-from": active.content.accent?.from ?? "#777b74",
+    "--stage-to": active.content.accent?.to ?? "#30332f",
+  } as CSSProperties;
+
+  return (
+    <section className="product-stage site-frame" style={style}>
+      <div className="product-stage-shell">
+        <aside className="product-stage-rail">
+          <div className="stage-rail-head">
+            <p>{t(ui.hero.title)}</p>
+            <span>{views.length.toString().padStart(2, "0")}</span>
           </div>
-          <div className="max-h-[25rem] space-y-1 overflow-y-auto overscroll-contain pr-1">
-            {views.length === 0 && (
-              <p className="rounded-[11px] bg-[var(--surface-strong)] px-4 py-8 text-center text-sm text-[var(--ink-muted)]">{t(ui.hero.catalogEmpty)}</p>
-            )}
-            {views.map((app) => (
-              <a key={app.id} href={`/${app.id}`} className="group grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-[11px] bg-[var(--surface-strong)] px-3 py-3 transition-colors hover:bg-[var(--accent-soft)] active:translate-y-px">
-                <AppIcon app={app} className="h-11 w-11" />
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-[var(--foreground)]">{app.content.name}</p>
-                  <p className="mt-0.5 truncate text-xs text-[var(--ink-muted)]">{t(app.content.platform)}</p>
-                </div>
-                <span className="text-sm text-[var(--ink-muted)] transition-transform group-hover:translate-x-0.5 group-hover:text-[var(--accent)]">→</span>
-              </a>
+
+          <div className="stage-tabs" role="tablist" aria-label={t(ui.hero.catalogLabel)}>
+            {views.map((app, index) => (
+              <button
+                key={app.id}
+                type="button"
+                role="tab"
+                aria-selected={app.id === active.id}
+                aria-controls="featured-app"
+                tabIndex={app.id === active.id ? 0 : -1}
+                onClick={() => setActiveId(app.id)}
+                onKeyDown={(event) => {
+                  const keyTargets: Record<string, number> = {
+                    ArrowDown: (index + 1) % views.length,
+                    ArrowRight: (index + 1) % views.length,
+                    ArrowUp: (index - 1 + views.length) % views.length,
+                    ArrowLeft: (index - 1 + views.length) % views.length,
+                    Home: 0,
+                    End: views.length - 1,
+                  };
+                  const targetIndex = keyTargets[event.key];
+                  if (targetIndex === undefined) return;
+                  event.preventDefault();
+                  setActiveId(views[targetIndex].id);
+                  const tabs = event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>("[role='tab']");
+                  requestAnimationFrame(() => tabs?.[targetIndex]?.focus());
+                }}
+                className="stage-tab"
+              >
+                <span className="stage-tab-index">{(index + 1).toString().padStart(2, "0")}</span>
+                <AppIcon app={app} eager={index < 4} className="stage-tab-icon h-10 w-10 rounded-[10px] text-sm" />
+                <span className="stage-tab-name">{app.content.name}</span>
+              </button>
             ))}
           </div>
+
+          <a href="#apps" className="stage-rail-foot">
+            <span>{t(ui.hero.ctaExplore)}</span>
+            <span aria-hidden="true">↓</span>
+          </a>
+        </aside>
+
+        <div id="featured-app" role="tabpanel" className="product-stage-main">
+          <div key={`${active.id}-copy`} className="stage-copy stage-change">
+            <div className="stage-meta">
+              <span>{t(active.content.platform)}</span>
+              <span>{t(ui.status[active.content.status])}</span>
+            </div>
+            <h1>{active.content.name}</h1>
+            <p>{t(active.content.tagline)}</p>
+            <RepoStats meta={active.meta} className="stage-repo-stats" />
+            <Link href={`/${active.id}`} className="stage-open-link">
+              <span>{t(ui.apps.viewDetails)}</span>
+              <span aria-hidden="true">↗</span>
+            </Link>
+          </div>
+
+          <div key={`${active.id}-visual`} className="stage-visual stage-change" aria-live="polite">
+            <span className="stage-watermark" aria-hidden="true">{(activeIndex + 1).toString().padStart(2, "0")}</span>
+            <AppIcon app={active} eager className="stage-app-icon h-20 w-20 rounded-[20px] text-2xl sm:h-24 sm:w-24 sm:rounded-[24px]" />
+            {active.screenshotUrls[0] ? (
+              <div className="stage-screen">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={active.screenshotUrls[0]} alt={t(active.content.tagline)} loading="eager" fetchPriority="high" />
+              </div>
+            ) : (
+              <div className="stage-no-screen" aria-hidden="true">
+                <span>{active.content.name}</span>
+              </div>
+            )}
+          </div>
         </div>
+      </div>
+
+      <div className="product-stage-caption">
+        <p>{t(ui.hero.subtitle)}</p>
+        <a href="https://github.com/baomi-app" target="_blank" rel="noreferrer">GitHub ↗</a>
       </div>
     </section>
   );

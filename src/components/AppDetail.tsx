@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AppIcon } from "@/components/AppIcon";
@@ -13,6 +14,10 @@ export function AppDetail({ app }: { app: AppView }) {
   const { content } = app;
   const features = content.features[locale];
   const [activeScreenshot, setActiveScreenshot] = useState<string | null>(null);
+  const style = {
+    "--app-from": content.accent?.from ?? "#777b74",
+    "--app-to": content.accent?.to ?? "#30332f",
+  } as CSSProperties;
 
   useEffect(() => {
     if (!activeScreenshot) return;
@@ -22,79 +27,84 @@ export function AppDetail({ app }: { app: AppView }) {
   }, [activeScreenshot]);
 
   return (
-    <article className="border-b border-[var(--rule)]">
-      <div className="mx-auto max-w-5xl px-4 pb-20 pt-8 sm:px-6 sm:pt-12">
-        <Link href="/#apps" className="group inline-flex items-center gap-2 rounded-lg text-sm font-semibold text-[var(--ink-muted)] transition-colors hover:text-[var(--accent)]">
-          <span className="transition-transform group-hover:-translate-x-1">←</span>
-          {t(ui.detail.back)}
-        </Link>
-
-        <header className="mt-8 rounded-[14px] border border-[var(--rule)] bg-[var(--surface-strong)] p-6 shadow-[0_18px_60px_rgba(32,70,45,0.08)] sm:p-8">
-          <div className="grid gap-7 md:grid-cols-[auto_1fr] md:items-start">
-            <AppIcon app={app} className="h-24 w-24 shrink-0 text-5xl" />
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[var(--ink-muted)]">
-                <span>{t(content.platform)}</span>
-                <span className="font-semibold text-[var(--accent)]">{t(ui.status[content.status])}</span>
-              </div>
-              <h1 className="mt-3 text-balance font-display text-5xl font-semibold leading-none tracking-[-.045em] sm:text-6xl">{content.name}</h1>
-              <p className="mt-5 max-w-2xl text-lg leading-8 text-[var(--ink-muted)]">{t(content.tagline)}</p>
-              <RepoStats meta={app.meta} className="mt-5" />
-              <div className="mt-7 flex flex-wrap gap-3">
-                {content.links.map((link, index) => (
-                  <a key={link.href} href={link.href} target="_blank" rel="noreferrer" className={index === 0 ? "inline-flex min-h-11 items-center whitespace-nowrap rounded-[14px] bg-[var(--accent)] px-5 text-sm font-semibold text-[var(--on-accent)] transition-[transform,background-color,color] duration-300 hover:-translate-y-0.5 hover:bg-[var(--brand-yellow)] hover:text-[#172019] active:translate-y-px" : "inline-flex min-h-11 items-center whitespace-nowrap rounded-[14px] border border-[var(--rule)] bg-[var(--background)] px-5 text-sm font-semibold transition-colors hover:border-[var(--accent)] active:translate-y-px"}>
-                    {t(link.label)}
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-        </header>
-
-        <section className="mt-12 max-w-3xl">
-          <h2 className="text-xl font-semibold tracking-[-.02em]">{t(ui.detail.about)}</h2>
-          <Markdown text={t(content.description)} className="mt-4 text-base leading-7" />
-        </section>
-
-        {app.screenshotUrls && app.screenshotUrls.length > 0 && (
-          <section className="mt-14">
-            <h2 className="text-xl font-semibold tracking-[-.02em]">{t(ui.detail.screenshots)}</h2>
-            <div className="mt-5 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4">
-              {app.screenshotUrls.map((url, index) => (
-                <button type="button" key={url} onClick={() => setActiveScreenshot(url)} className="h-[15rem] flex-none cursor-zoom-in snap-start overflow-hidden rounded-[14px] border border-[var(--rule)] bg-[var(--surface)] transition-[transform,border-color] hover:-translate-y-1 hover:border-[var(--accent)] sm:h-[22rem]">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={url} alt={locale === "zh" ? `${content.name} 界面预览 ${index + 1}` : `${content.name} screenshot ${index + 1}`} className="h-full w-auto object-contain" loading="lazy" />
-                </button>
-              ))}
-            </div>
-          </section>
-        )}
-
-        <section className="mt-14">
-          <h2 className="text-xl font-semibold tracking-[-.02em]">{t(ui.detail.features)}</h2>
-          <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-            {features.map((feature) => (
-              <li key={feature} className="rounded-[14px] bg-[var(--surface)] p-4 leading-7 text-[var(--ink-muted)]">
-                {feature}
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        {content.troubleshooting && (
-          <section className="mt-14 rounded-[14px] bg-[var(--surface)] p-6 sm:p-8">
-            <h2 className="text-xl font-semibold tracking-[-.02em]">{t(ui.detail.troubleshooting)}</h2>
-            <Markdown text={t(content.troubleshooting)} className="mt-4" />
-          </section>
-        )}
+    <article className="app-product" style={style}>
+      <div className="site-frame app-product-back-row">
+        <Link href="/#apps" className="app-product-back"><span aria-hidden="true">←</span>{t(ui.detail.back)}</Link>
+        <span>{app.repo}</span>
       </div>
 
+      <header className="site-frame app-product-hero">
+        <div className="app-product-copy">
+          <AppIcon app={app} eager className="app-product-icon h-24 w-24 rounded-[24px] text-3xl sm:h-32 sm:w-32 sm:rounded-[30px]" />
+          <div className="app-product-status">
+            <span>{t(content.platform)}</span><i /><span>{t(ui.status[content.status])}</span>
+          </div>
+          <h1>{content.name}</h1>
+          <p>{t(content.tagline)}</p>
+          <RepoStats meta={app.meta} className="app-product-stats" />
+          <div className="app-product-actions">
+            {content.links.map((link, index) => (
+              <a key={link.href} href={link.href} target="_blank" rel="noreferrer" className={index === 0 ? "product-action product-action-primary" : "product-action"}>{t(link.label)}<span aria-hidden="true">↗</span></a>
+            ))}
+            {content.privacy && <Link href={`/${app.id}/privacy`} className="product-action">{locale === "zh" ? "隐私政策" : "Privacy"}</Link>}
+          </div>
+        </div>
+
+        <div className="app-product-visual">
+          <span className="app-product-visual-mark" aria-hidden="true">{content.name.slice(0, 2).toUpperCase()}</span>
+          {app.screenshotUrls[0] ? (
+            <button type="button" onClick={() => setActiveScreenshot(app.screenshotUrls[0])} className="app-product-screen cursor-zoom-in">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={app.screenshotUrls[0]} alt={locale === "zh" ? `${content.name} 界面预览` : `${content.name} screenshot`} loading="eager" fetchPriority="high" />
+            </button>
+          ) : (
+            <div className="app-product-blank"><AppIcon app={app} eager className="h-40 w-40 rounded-[36px] text-5xl" /></div>
+          )}
+        </div>
+      </header>
+
+      <div className="site-frame app-product-story">
+        <div className="app-story-label"><span>01</span><p>{t(ui.detail.about)}</p></div>
+        <Markdown text={t(content.description)} className="prose-baomi app-story-copy" />
+      </div>
+
+      {app.screenshotUrls.length > 1 && (
+        <section className="app-gallery">
+          <div className="site-frame app-gallery-heading"><span>02</span><h2>{t(ui.detail.screenshots)}</h2><p>{app.screenshotUrls.length.toString().padStart(2, "0")}</p></div>
+          <div className="app-gallery-track">
+            {app.screenshotUrls.map((url, index) => (
+              <button type="button" key={url} onClick={() => setActiveScreenshot(url)} className="app-gallery-shot cursor-zoom-in">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={url} alt={locale === "zh" ? `${content.name} 界面预览 ${index + 1}` : `${content.name} screenshot ${index + 1}`} loading="lazy" />
+                <span>{(index + 1).toString().padStart(2, "0")}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section className="site-frame app-features">
+        <div className="app-story-label"><span>{app.screenshotUrls.length > 1 ? "03" : "02"}</span><p>{t(ui.detail.features)}</p></div>
+        <ol>
+          {features.map((feature, index) => (
+            <li key={feature}><span>{(index + 1).toString().padStart(2, "0")}</span><p>{feature}</p></li>
+          ))}
+        </ol>
+      </section>
+
+      {content.troubleshooting && (
+        <section className="site-frame app-support">
+          <div className="app-story-label"><span>+</span><p>{t(ui.detail.troubleshooting)}</p></div>
+          <Markdown text={t(content.troubleshooting)} className="prose-baomi app-story-copy" />
+        </section>
+      )}
+
       {activeScreenshot && (
-        <div role="dialog" aria-modal="true" aria-label={t(ui.detail.close)} onClick={() => setActiveScreenshot(null)} className="fixed inset-0 z-50 flex cursor-zoom-out items-center justify-center bg-[#101612e8] p-4 backdrop-blur-md animate-fade-in">
-          <div className="relative max-h-[90dvh] max-w-[94vw] overflow-hidden rounded-[14px] border border-white/20 animate-scale-up" onClick={(event) => event.stopPropagation()}>
+        <div role="dialog" aria-modal="true" aria-label={t(ui.detail.close)} onClick={() => setActiveScreenshot(null)} className="animate-fade-in screenshot-dialog">
+          <div className="animate-scale-up screenshot-dialog-inner" onClick={(event) => event.stopPropagation()}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={activeScreenshot} alt={locale === "zh" ? `${content.name} 放大界面预览` : `${content.name} enlarged screenshot`} className="h-auto max-h-[90dvh] w-full object-contain" />
-            <button type="button" onClick={() => setActiveScreenshot(null)} className="absolute right-3 top-3 grid h-11 w-11 place-items-center rounded-[14px] bg-[#172019d9] text-2xl leading-none text-white transition-transform hover:scale-105 active:scale-95" aria-label={t(ui.detail.close)}>×</button>
+            <img src={activeScreenshot} alt={locale === "zh" ? `${content.name} 放大界面预览` : `${content.name} enlarged screenshot`} />
+            <button type="button" onClick={() => setActiveScreenshot(null)} aria-label={t(ui.detail.close)}>×</button>
           </div>
         </div>
       )}

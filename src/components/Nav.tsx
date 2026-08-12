@@ -1,41 +1,27 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Logo } from "@/components/Logo";
 import { LangToggle } from "@/components/LangToggle";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { ui, useLocale } from "@/i18n";
 
 export function Nav() {
   const { t } = useLocale();
+  const pathname = usePathname();
+  const toolsActive = pathname.startsWith("/tools");
+
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--rule)] bg-[color:var(--background)]/90 backdrop-blur-xl">
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="transition-opacity hover:opacity-75">
-          <Logo />
-        </Link>
-        <div className="flex items-center gap-3 text-sm font-medium text-[var(--ink-muted)] sm:gap-5">
-          <Link
-            href="/#apps"
-            className="hidden rounded-lg px-2 py-1 transition-colors hover:text-[var(--foreground)] sm:inline"
-          >
-            {t(ui.nav.apps)}
-          </Link>
-          <Link
-            href="/tools"
-            className="rounded-lg px-2 py-1 transition-colors hover:text-[var(--foreground)]"
-          >
-            {t(ui.nav.tools)}
-          </Link>
-          <a
-            href="https://github.com/baomi-app"
-            target="_blank"
-            rel="noreferrer"
-            className="hidden rounded-lg px-2 py-1 transition-colors hover:text-[var(--foreground)] md:inline"
-          >
-            GitHub
-          </a>
-          <LangToggle />
+    <header className="site-nav-wrap">
+      <nav className="site-frame site-nav" aria-label="Main navigation">
+        <Link href="/" className="site-nav-logo" aria-label="baomi.app home"><Logo /></Link>
+        <div className="site-nav-center">
+          <Link href="/#apps" className="site-nav-link nav-apps" aria-current={!toolsActive && pathname !== "/" ? "page" : undefined}>{t(ui.nav.apps)}</Link>
+          <Link href="/tools" className="site-nav-link" aria-current={toolsActive ? "page" : undefined}>{t(ui.nav.tools)}</Link>
+          <a href="https://github.com/baomi-app" target="_blank" rel="noreferrer" className="site-nav-link nav-github">GitHub ↗</a>
         </div>
+        <div className="site-nav-controls"><ThemeToggle /><LangToggle /></div>
       </nav>
     </header>
   );
