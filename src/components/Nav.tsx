@@ -8,21 +8,21 @@ import { ui, useLocale } from "@/i18n";
 export function Nav() {
   const { t } = useLocale();
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--rule)] bg-[color:var(--background)]/90 backdrop-blur-xl">
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="transition-opacity hover:opacity-75">
+    <header className="sticky top-0 z-50 bg-[color:var(--background)]/88 backdrop-blur-xl">
+      <nav className="mx-auto flex h-[4.5rem] max-w-[1480px] items-center justify-between px-5 sm:px-8 lg:px-14 xl:px-20">
+        <Link href="/" className="rounded-lg transition-opacity hover:opacity-70">
           <Logo />
         </Link>
-        <div className="flex items-center gap-3 text-sm font-medium text-[var(--ink-muted)] sm:gap-5">
+        <div className="flex items-center gap-1 text-sm font-medium text-[var(--ink-muted)] sm:gap-2">
           <Link
             href="/#apps"
-            className="hidden rounded-lg px-2 py-1 transition-colors hover:text-[var(--foreground)] sm:inline"
+            className="hidden min-h-10 items-center rounded-full px-3 transition-colors hover:bg-[var(--surface)] hover:text-[var(--foreground)] sm:inline-flex"
           >
             {t(ui.nav.apps)}
           </Link>
           <Link
             href="/tools"
-            className="rounded-lg px-2 py-1 transition-colors hover:text-[var(--foreground)]"
+            className="inline-flex min-h-10 items-center rounded-full px-3 transition-colors hover:bg-[var(--surface)] hover:text-[var(--foreground)]"
           >
             {t(ui.nav.tools)}
           </Link>
@@ -30,9 +30,9 @@ export function Nav() {
             href="https://github.com/baomi-app"
             target="_blank"
             rel="noreferrer"
-            className="hidden rounded-lg px-2 py-1 transition-colors hover:text-[var(--foreground)] md:inline"
+            className="hidden min-h-10 items-center rounded-full px-3 transition-colors hover:bg-[var(--surface)] hover:text-[var(--foreground)] md:inline-flex"
           >
-            GitHub
+            GitHub ↗
           </a>
           <LangToggle />
         </div>

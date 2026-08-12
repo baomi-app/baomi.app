@@ -1,38 +1,38 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7faf7;
-  --foreground: #172019;
-  --surface: #edf4ee;
-  --surface-strong: #ffffff;
-  --ink-muted: #59665c;
-  --rule: #d2ddd4;
-  --brand-green: #4ade80;
-  --brand-yellow: #fbbf24;
-  --accent: #157a43;
-  --accent-soft: #dff8e8;
-  --on-accent: #f7fff9;
+  --background: #f4f3ed;
+  --foreground: #121713;
+  --surface: #e9ebe4;
+  --surface-strong: #fffef9;
+  --ink-muted: #626b64;
+  --rule: #d6dad2;
+  --brand-green: #36cf7a;
+  --brand-yellow: #ffc62f;
+  --accent: #16834b;
+  --accent-soft: #dcefe3;
+  --on-accent: #fffef8;
   --teal: var(--accent);
   --saffron: var(--brand-yellow);
   --tomato: var(--accent);
   --blue: var(--accent);
-  --font-geist-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
-  --font-geist-mono: var(--font-geist-mono-next), ui-monospace, monospace;
+  --font-geist-sans: var(--font-geist), "PingFang SC", "Hiragino Sans GB", ui-sans-serif, system-ui, sans-serif;
+  --font-geist-mono: var(--font-geist-mono-next), "SFMono-Regular", ui-monospace, monospace;
   --font-display: var(--font-geist-sans);
   color-scheme: light dark;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #101612;
-    --foreground: #eff7f1;
-    --surface: #18221b;
-    --surface-strong: #1d2920;
-    --ink-muted: #a4b1a7;
-    --rule: #344239;
+    --background: #0e120f;
+    --foreground: #f2f5ef;
+    --surface: #171d18;
+    --surface-strong: #1c231e;
+    --ink-muted: #a9b2ab;
+    --rule: #303a32;
     --accent: #4ade80;
-    --accent-soft: #173a24;
-    --on-accent: #102016;
+    --accent-soft: #193b25;
+    --on-accent: #0e1b12;
   }
 }
 
@@ -47,6 +47,8 @@
 html { scroll-behavior: smooth; }
 
 body {
+  min-width: 320px;
+  overflow-x: clip;
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans);
@@ -55,6 +57,45 @@ body {
 
 ::selection { background: var(--brand-yellow); color: #172019; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.hero-stage {
+  isolation: isolate;
+  box-shadow: 0 32px 90px rgba(17, 24, 19, .16);
+}
+
+.hero-stage::before {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  content: "";
+  background:
+    radial-gradient(circle at 12% 12%, rgba(54, 207, 122, .22), transparent 32%),
+    radial-gradient(circle at 88% 80%, rgba(255, 198, 47, .17), transparent 28%),
+    #101612;
+}
+
+.hero-stage::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  opacity: .2;
+  background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: linear-gradient(to bottom right, black, transparent 72%);
+}
+
+.app-art::after,
+.hero-app-art::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.19), transparent 38%),
+    radial-gradient(circle at 78% 20%, rgba(255,255,255,.28), transparent 25%),
+    linear-gradient(to top, rgba(0,0,0,.15), transparent 45%);
+}
 
 @keyframes rise-in {
   from { opacity: 0; transform: translateY(18px); }
