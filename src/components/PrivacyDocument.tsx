@@ -9,13 +9,11 @@ export function PrivacyDocument({ appSlug, appName, title, updated, body }: { ap
 
   return (
     <article className="policy-page site-frame">
-      <aside className="policy-side">
+      <div className="policy-back-row">
         <Link href={`/${appSlug}`}><span aria-hidden="true">←</span>{appName}</Link>
-        <div><span>DOC</span><span>PRIVACY</span><span>{t(updated)}</span></div>
-      </aside>
+      </div>
       <div className="policy-main">
         <header>
-          <p>{locale === "zh" ? "隐私政策" : "Privacy policy"}</p>
           <h1>{t(title)}</h1>
           <span>{locale === "zh" ? "更新于" : "Updated"} · {t(updated)}</span>
         </header>

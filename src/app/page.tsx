@@ -13,7 +13,7 @@ export default async function Home() {
     <>
       <Nav />
       <main className="flex-1">
-        <Hero views={views} />
+        <Hero />
         <AppsSection views={views} />
         <ToolsSection />
       </main>

@@ -9,6 +9,7 @@ import { apps, type AppConfig, type AppContent } from "@/data/apps";
 import { getGitHubToken } from "@/data/github-token";
 
 const GITHUB_REVALIDATE_SECONDS = 3600;
+const GITHUB_REQUEST_TIMEOUT_MS = 8000;
 const GITHUB_CACHE_TAG = "github";
 const MAX_CACHE_TAG_LENGTH = 256;
 
@@ -26,6 +27,15 @@ export type AppView = AppConfig & {
   /** Absolute URLs to the app's screenshots. */
   screenshotUrls: string[];
 };
+
+type DevContentCache = Map<string, Promise<AppContent | null>>;
+
+function devContentCache(): DevContentCache {
+  const scope = globalThis as typeof globalThis & {
+    __baomiAppContentCache?: DevContentCache;
+  };
+  return (scope.__baomiAppContentCache ??= new Map());
+}
 
 function assetVersion(content: AppContent): string | null {
   const parts = [content.version, content.build]
@@ -154,6 +164,7 @@ async function fetchRepoRaw(
       `https://raw.githubusercontent.com/${config.repo}/${branch}/${encodedPath}`,
       {
         headers,
+        signal: AbortSignal.timeout(GITHUB_REQUEST_TIMEOUT_MS),
         next: {
           revalidate: GITHUB_REVALIDATE_SECONDS,
           tags: [GITHUB_CACHE_TAG, repoTag(config.repo), repoFileTag(config, path)],
@@ -180,13 +191,14 @@ async function fetchRepoRaw(
   try {
     const headers = await githubRawHeaders();
     if (!("Authorization" in headers)) {
-      console.warn(`[GitHub API] GITHUB_TOKEN is not defined in environment variables!`);
+      return null;
     }
 
     const res = await fetch(
       `https://api.github.com/repos/${config.repo}/contents/${encodedPath}?ref=${encodeURIComponent(branch)}`,
       {
         headers,
+        signal: AbortSignal.timeout(GITHUB_REQUEST_TIMEOUT_MS),
         next: {
           revalidate: GITHUB_REVALIDATE_SECONDS,
           tags: [GITHUB_CACHE_TAG, repoTag(config.repo), repoFileTag(config, path)],
@@ -216,6 +228,7 @@ async function ghGet(path: string): Promise<Record<string, unknown> | null> {
   try {
     const res = await fetch(`https://api.github.com/${path}`, {
       headers: await githubJsonHeaders(),
+      signal: AbortSignal.timeout(GITHUB_REQUEST_TIMEOUT_MS),
       next: {
         revalidate: GITHUB_REVALIDATE_SECONDS,
         tags: [GITHUB_CACHE_TAG, cacheTag(`github:${path}`)],
@@ -247,9 +260,23 @@ export async function getAppContent(
 ): Promise<AppContent | null> {
   if (config.content) return config.content;
   const file = config.contentFile ?? "baomi.json";
-  const content = await fetchRepoRaw(config, file, "json");
+  const load = () => fetchRepoRaw(config, file, "json") as Promise<AppContent | null>;
 
-  return content as AppContent | null;
+  // Browser hard refreshes bypass Next's fetch cache in development. Keep the
+  // remote config (including a missing file) for the lifetime of `next dev` so
+  // CSS/component HMR never waits on GitHub again.
+  if (process.env.NODE_ENV === "development") {
+    const key = `${config.repo}:${config.branch ?? "main"}:${file}`;
+    const cache = devContentCache();
+    const cached = cache.get(key);
+    if (cached) return cached;
+
+    const pending = load();
+    cache.set(key, pending);
+    return pending;
+  }
+
+  return load();
 }
 
 export async function getRepoText(
@@ -275,6 +302,20 @@ export async function getAppView(config: AppConfig): Promise<AppView | null> {
 }
 
 export async function getAllAppViews(): Promise<AppView[]> {
-  const views = await Promise.all(apps.map(getAppView));
+  // Catalog cards do not render repository statistics. Avoid two extra GitHub
+  // API calls per app on every cold dev start; detail pages still load them.
+  const views = await Promise.all(
+    apps.map(async (config): Promise<AppView | null> => {
+      const content = await getAppContent(config);
+      if (!content) return null;
+      return {
+        ...config,
+        content,
+        meta: null,
+        iconUrl: resolveIconUrl(config, content),
+        screenshotUrls: resolveScreenshotUrls(config, content),
+      };
+    })
+  );
   return views.filter((v): v is AppView => v !== null);
 }

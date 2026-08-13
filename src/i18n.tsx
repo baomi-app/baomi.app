@@ -27,13 +27,13 @@ export const ui = {
     tools: { en: "Tools", zh: "工具" },
   },
   hero: {
-    title: { en: "Small apps, one job well done.", zh: "小应用，做好一件事。" },
+    badge: { en: "Independent apps and tools", zh: "独立应用和小工具" },
+    titleLead: { en: "Useful apps, ", zh: "做点好用的，" },
+    titleAccent: { en: "without the extras.", zh: "也做得简单一点。" },
     subtitle: {
-      en: "Native apps, open-source tools, and browser utilities for everyday work.",
-      zh: "原生应用、开源工具，以及随手可用的浏览器小工具。",
+      en: "Small, focused software for macOS, iOS, and the web.",
+      zh: "为 macOS、iOS 和网页做一些专注、顺手的小软件。",
     },
-    ctaExplore: { en: "Browse apps", zh: "浏览应用" },
-    catalogLabel: { en: "Apps", zh: "应用" },
   },
   apps: {
     heading: { en: "Apps", zh: "应用" },
