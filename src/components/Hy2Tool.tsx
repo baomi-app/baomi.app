@@ -614,14 +614,13 @@ export function Hy2Tool() {
 
   return (
     <section className="hy2-workbench border-b border-[var(--rule)]">
-      <div className="site-frame pb-24 pt-14 sm:pb-28 sm:pt-20">
-        <header className="grid gap-8 border-b border-[var(--rule)] pb-12 sm:pb-14 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,.55fr)] lg:items-end lg:gap-16">
+      <div className="site-frame pb-20 pt-12 sm:pb-24 sm:pt-16">
+        <header className="grid gap-6 border-b border-[var(--rule)] pb-10 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,.55fr)] lg:items-end lg:gap-16">
           <div>
-            <p className="section-kicker">HY2 · Clash · Shadowrocket</p>
-            <h1 className="mt-4 max-w-[13ch] text-balance font-display text-[clamp(3rem,7vw,5.8rem)] font-semibold leading-[.96] tracking-[-.055em]">
+            <h1 className="hy2-title">
               {t(text.title)}
             </h1>
-            <p className="mt-6 max-w-[48ch] text-base leading-7 text-[var(--ink-muted)] sm:text-lg sm:leading-8">
+            <p className="mt-4 max-w-[52ch] text-base leading-7 text-[var(--ink-muted)]">
               {t(text.intro)}
             </p>
           </div>
@@ -634,10 +633,7 @@ export function Hy2Tool() {
         <div className="mt-8 grid gap-6 xl:grid-cols-2">
           <section className="tool-panel">
             <header className="tool-panel-header flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <span className="grid h-7 w-7 place-items-center rounded-full bg-[var(--foreground)] font-mono text-[10px] text-[var(--background)]">1</span>
-                <h2 className="text-sm font-semibold">{t(text.serverPanel)}</h2>
-              </div>
+              <h2 className="text-sm font-semibold">{t(text.serverPanel)}</h2>
               <div className="flex gap-2">
                 <button type="button" onClick={() => setHy2Input(sampleHy2Server)} className="quiet-button min-h-9 px-3 text-xs">{t(text.useSample)}</button>
                 <button type="button" onClick={() => setHy2Input("")} className="quiet-button min-h-9 px-3 text-xs">{t(text.clear)}</button>
@@ -681,10 +677,7 @@ export function Hy2Tool() {
 
           <section className="tool-panel">
             <header className="tool-panel-header flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <span className="grid h-7 w-7 place-items-center rounded-full bg-[var(--foreground)] font-mono text-[10px] text-[var(--background)]">2</span>
-                <h2 className="text-sm font-semibold">{t(text.clashPanel)}</h2>
-              </div>
+              <h2 className="text-sm font-semibold">{t(text.clashPanel)}</h2>
               <div className="flex gap-2">
                 <button type="button" onClick={() => setClashInput(clashResult.output || sampleClash)} className="quiet-button min-h-9 px-3 text-xs">{t(text.useSample)}</button>
                 <button type="button" onClick={() => setClashInput("")} className="quiet-button min-h-9 px-3 text-xs">{t(text.clear)}</button>

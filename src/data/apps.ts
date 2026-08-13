@@ -31,7 +31,7 @@ export type AppContent = {
   /** Icon: a path relative to the repo root (e.g. "icon.png") or an absolute URL. */
   icon?: string;
   screenshots?: string[];
-  /** Brand gradient as two hex colors. Falls back to a neutral gradient. */
+  /** Brand colors. The first color is used as the catalog hover background. */
   accent?: Accent;
   platform: L;
   tagline: L;
@@ -102,16 +102,6 @@ export const apps: AppConfig[] = [
     },
   },
 ];
-
-
 export function getConfig(id: string): AppConfig | undefined {
   return apps.find((app) => app.id === id);
-}
-
-const DEFAULT_ACCENT: Accent = { from: "#a1a1aa", to: "#52525b" };
-
-/** CSS gradient string for an app's accent, used in inline styles. */
-export function accentGradient(accent?: Accent): string {
-  const { from, to } = accent ?? DEFAULT_ACCENT;
-  return `linear-gradient(to bottom right, ${from}, ${to})`;
 }
