@@ -20,11 +20,11 @@ export function AppIcon({
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={app.iconUrl}
-        alt={`${app.content.name} icon`}
+        alt=""
         loading={eager ? "eager" : "lazy"}
         fetchPriority={eager ? "high" : "auto"}
         onError={() => setErrored(true)}
-        className={`object-cover ring-1 ring-black/10 ${className}`}
+        className={`rounded-lg object-cover ring-1 ring-black/10 ${className}`}
       />
     );
   }
@@ -32,7 +32,7 @@ export function AppIcon({
   return (
     <span
       style={{ backgroundColor: app.content.accent?.from ?? "var(--accent)" }}
-      className={`grid place-items-center font-semibold text-white ring-1 ring-black/10 ${className}`}
+      className={`grid place-items-center rounded-lg font-semibold text-white ring-1 ring-black/10 ${className}`}
     >
       {app.content.name.charAt(0)}
     </span>

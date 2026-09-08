@@ -550,19 +550,24 @@ function buildShadowrocketLink(proxy: ClashProxy): string | null {
 
 function CopyButton({ value, label, copiedLabel }: { value: string; label: string; copiedLabel: string }) {
   const [copied, setCopied] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const { t } = useLocale();
 
   return (
     <button
       type="button"
       disabled={!value}
       onClick={async () => {
-        await navigator.clipboard.writeText(value);
-        setCopied(true);
-        window.setTimeout(() => setCopied(false), 1200);
+        try {
+          await navigator.clipboard.writeText(value);
+          setFailed(false);
+          setCopied(true);
+          window.setTimeout(() => setCopied(false), 1200);
+        } catch { setFailed(true); }
       }}
-      className="quiet-button min-h-9 px-3 text-xs disabled:cursor-not-allowed disabled:opacity-45"
+      className="rounded-md border border-[var(--foreground)] bg-[var(--surface)] px-3 py-2 text-xs font-semibold text-[var(--foreground)] transition-colors hover:bg-[var(--surface-strong)] disabled:cursor-not-allowed disabled:opacity-45"
     >
-      {copied ? copiedLabel : label}
+      {failed ? t({ en: "Select text to copy", zh: "请选中文字复制" }) : copied ? copiedLabel : label}
     </button>
   );
 }
@@ -613,99 +618,182 @@ export function Hy2Tool() {
   }, [clashInput, t]);
 
   return (
-    <section className="hy2-workbench border-b border-[var(--rule)]">
-      <div className="site-frame pb-20 pt-12 sm:pb-24 sm:pt-16">
-        <header className="grid gap-6 border-b border-[var(--rule)] pb-10 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,.55fr)] lg:items-end lg:gap-16">
+    <section className="relative overflow-hidden border-b border-[var(--rule)]">
+      <div className="mx-auto max-w-6xl px-6 pt-12 pb-20 sm:pt-16">
+        <span className="inline-flex items-center gap-2 rounded-full bg-[var(--accent-soft)] px-3.5 py-2 text-xs font-medium text-[var(--accent)]">
+          <span className="h-2 w-2 bg-[var(--tomato)]" />
+          {t(text.badge)}
+        </span>
+
+        <div className="mt-8 grid gap-8 border-b border-[var(--foreground)] pb-8 lg:grid-cols-[1fr_0.72fr] lg:items-end">
           <div>
-            <h1 className="hy2-title">
+            <h1 className="max-w-4xl font-display text-4xl font-medium leading-[1.1] tracking-[-.045em] text-[var(--foreground)] sm:text-6xl">
               {t(text.title)}
             </h1>
-            <p className="mt-4 max-w-[52ch] text-base leading-7 text-[var(--ink-muted)]">
+            <p className="mt-5 max-w-2xl text-lg leading-8 text-[var(--ink-muted)]">
               {t(text.intro)}
             </p>
           </div>
-          <p className="flex items-start gap-3 text-sm leading-6 text-[var(--ink-muted)]">
-            <svg viewBox="0 0 24 24" className="mt-0.5 h-4 w-4 shrink-0 text-[var(--accent)]" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          <p className="border border-[var(--rule)] bg-[var(--surface)] p-4 text-sm leading-6 text-[var(--ink-muted)] rounded-[14px]">
             {t(text.privacy)}
           </p>
-        </header>
-
-        <div className="mt-8 grid gap-6 xl:grid-cols-2">
-          <section className="tool-panel">
-            <header className="tool-panel-header flex flex-wrap items-center justify-between gap-3">
-              <h2 className="text-sm font-semibold">{t(text.serverPanel)}</h2>
-              <div className="flex gap-2">
-                <button type="button" onClick={() => setHy2Input(sampleHy2Server)} className="quiet-button min-h-9 px-3 text-xs">{t(text.useSample)}</button>
-                <button type="button" onClick={() => setHy2Input("")} className="quiet-button min-h-9 px-3 text-xs">{t(text.clear)}</button>
-              </div>
-            </header>
-
-            <div className="tool-panel-body">
-              <label className="block text-sm font-semibold">
-                {t(text.publicHost)}
-                <input type="text" value={publicHost} onChange={(event) => setPublicHost(event.target.value)} placeholder={t(text.publicHostPlaceholder)} autoComplete="off" spellCheck={false} className="field-input mt-2" />
-                <span className="mt-1.5 block text-xs font-normal leading-5 text-[var(--ink-muted)]">{t(text.publicHostHelp)}</span>
-              </label>
-
-              <fieldset className="mt-5">
-                <legend className="text-sm font-semibold">{t(text.routing)}</legend>
-                <div className="mt-2 grid gap-2 sm:grid-cols-3">
-                  {routingOptions.map((option) => (
-                    <button key={option.value} type="button" onClick={() => setRoutingMode(option.value)} aria-pressed={routingMode === option.value} className="routing-option">
-                      <span className="block text-sm font-semibold">{t(option.label)}</span>
-                      <span className={`mt-1 block text-xs leading-5 ${routingMode === option.value ? "opacity-70" : "text-[var(--ink-muted)]"}`}>{t(option.description)}</span>
-                    </button>
-                  ))}
-                </div>
-              </fieldset>
-
-              <label className="mt-5 block text-sm font-semibold">
-                {t(text.hy2Input)}
-                <textarea value={hy2Input} onChange={(event) => setHy2Input(event.target.value)} className="field-editor mt-2" spellCheck={false} />
-              </label>
-
-              <div className="mt-5 flex items-center justify-between gap-3">
-                <h3 className="font-mono text-[10px] font-semibold uppercase tracking-[.12em] text-[var(--ink-muted)]">{t(text.clashOutput)}</h3>
-                <CopyButton value={clashResult.output} label={t(text.copy)} copiedLabel={t(text.copied)} />
-              </div>
-              <pre className="code-output mt-2">{clashResult.output || t(text.noClash)}</pre>
-              {clashResult.messages.length > 0 && (
-                <ul className="mt-3 space-y-1 text-sm text-[var(--danger)]">{clashResult.messages.map((message) => <li key={message}>{message}</li>)}</ul>
-              )}
-            </div>
-          </section>
-
-          <section className="tool-panel">
-            <header className="tool-panel-header flex flex-wrap items-center justify-between gap-3">
-              <h2 className="text-sm font-semibold">{t(text.clashPanel)}</h2>
-              <div className="flex gap-2">
-                <button type="button" onClick={() => setClashInput(clashResult.output || sampleClash)} className="quiet-button min-h-9 px-3 text-xs">{t(text.useSample)}</button>
-                <button type="button" onClick={() => setClashInput("")} className="quiet-button min-h-9 px-3 text-xs">{t(text.clear)}</button>
-              </div>
-            </header>
-
-            <div className="tool-panel-body">
-              <label className="block text-sm font-semibold">
-                {t(text.clashInput)}
-                <textarea value={clashInput} onChange={(event) => setClashInput(event.target.value)} className="field-editor mt-2 min-h-[33.5rem]" spellCheck={false} />
-              </label>
-
-              <div className="mt-5 flex items-center justify-between gap-3">
-                <h3 className="font-mono text-[10px] font-semibold uppercase tracking-[.12em] text-[var(--ink-muted)]">{t(text.shadowrocketOutput)}</h3>
-                <CopyButton value={shadowrocketResult.output} label={t(text.copy)} copiedLabel={t(text.copied)} />
-              </div>
-              <pre className="code-output mt-2 whitespace-pre-wrap break-all">{shadowrocketResult.output || t(text.noShadowrocket)}</pre>
-              {shadowrocketResult.messages.length > 0 && (
-                <ul className="mt-3 space-y-1 text-sm text-[var(--danger)]">{shadowrocketResult.messages.map((message) => <li key={message}>{message}</li>)}</ul>
-              )}
-            </div>
-          </section>
         </div>
 
-        <details className="mt-6 border-t border-[var(--rule)] py-4 text-sm text-[var(--ink-muted)]">
-          <summary className="cursor-pointer font-semibold text-[var(--foreground)]">{t(text.notes)}</summary>
-          <ul className="mt-4 grid gap-3 leading-6 md:grid-cols-2"><li>{t(text.noteHost)}</li><li>{t(text.noteScope)}</li></ul>
-        </details>
+        <div className="mt-8 grid gap-6 xl:grid-cols-2">
+          <div className="min-w-0 rounded-[18px] border border-[var(--rule)] bg-[var(--surface-strong)] p-5">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--rule)] pb-4">
+              <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[var(--tomato)]">
+                {t(text.serverPanel)}
+              </h2>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setHy2Input(sampleHy2Server)}
+                  className="rounded-md border border-[var(--rule)] bg-[var(--surface-strong)] px-3 py-2 text-xs font-semibold text-[var(--ink-muted)] transition-colors hover:text-[var(--foreground)]"
+                >
+                  {t(text.useSample)}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setHy2Input("")}
+                  className="rounded-md border border-[var(--rule)] bg-[var(--surface-strong)] px-3 py-2 text-xs font-semibold text-[var(--ink-muted)] transition-colors hover:text-[var(--foreground)]"
+                >
+                  {t(text.clear)}
+                </button>
+              </div>
+            </div>
+
+            <label className="mt-4 block text-sm font-semibold text-[var(--foreground)]">
+              {t(text.publicHost)}
+              <input
+                type="text"
+                value={publicHost}
+                onChange={(event) => setPublicHost(event.target.value)}
+                placeholder={t(text.publicHostPlaceholder)}
+                autoComplete="off"
+                spellCheck={false}
+                className="mt-2 h-11 w-full rounded-md border border-[var(--rule)] bg-[var(--surface-strong)] px-3 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--ink-muted)] focus:border-[var(--foreground)]"
+              />
+              <span className="mt-1.5 block text-xs font-normal leading-5 text-[var(--ink-muted)]">
+                {t(text.publicHostHelp)}
+              </span>
+            </label>
+
+            <div className="mt-4">
+              <p className="text-sm font-semibold text-[var(--foreground)]">
+                {t(text.routing)}
+              </p>
+              <div className="mt-2 grid gap-2 sm:grid-cols-3">
+                {routingOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setRoutingMode(option.value)}
+                    aria-pressed={routingMode === option.value}
+                    className={
+                      routingMode === option.value
+                        ? "rounded-md border border-[var(--foreground)] bg-[var(--accent)] p-3 text-left text-[var(--on-accent)]"
+                        : "rounded-md border border-[var(--rule)] bg-[var(--surface-strong)] p-3 text-left text-[var(--foreground)] transition-colors hover:border-[var(--foreground)]"
+                    }
+                  >
+                    <span className="block text-sm font-semibold">{t(option.label)}</span>
+                    <span className={routingMode === option.value ? "mt-1 block text-xs leading-5 text-[var(--on-accent)] opacity-80" : "mt-1 block text-xs leading-5 text-[var(--ink-muted)]"}>
+                      {t(option.description)}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <label className="mt-4 block text-sm font-semibold text-[var(--foreground)]">
+              {t(text.hy2Input)}
+              <textarea
+                value={hy2Input}
+                onChange={(event) => setHy2Input(event.target.value)}
+                className="mt-2 min-h-[22rem] w-full resize-y rounded-md border border-[var(--rule)] bg-[var(--surface-strong)] p-3 font-mono text-xs leading-5 outline-none focus:border-[var(--foreground)]"
+                spellCheck={false}
+              />
+            </label>
+
+            <div className="mt-4 flex items-center justify-between gap-3">
+              <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[var(--teal)]">
+                {t(text.clashOutput)}
+              </h3>
+              <CopyButton value={clashResult.output} label={t(text.copy)} copiedLabel={t(text.copied)} />
+            </div>
+            <pre className="mt-2 min-h-[18rem] overflow-auto rounded-md border border-[var(--rule)] bg-[#16231b] p-4 text-xs leading-6 text-[#edf2ee]">
+              {clashResult.output || t(text.noClash)}
+            </pre>
+            {clashResult.messages.length > 0 && (
+              <ul className="mt-3 space-y-1 text-sm text-[var(--tomato)]">
+                {clashResult.messages.map((message) => (
+                  <li key={message}>{message}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="min-w-0 rounded-[18px] border border-[var(--rule)] bg-[var(--surface-strong)] p-5">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--rule)] pb-4">
+              <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[var(--tomato)]">
+                {t(text.clashPanel)}
+              </h2>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setClashInput(clashResult.output || sampleClash)}
+                  className="rounded-md border border-[var(--rule)] bg-[var(--surface-strong)] px-3 py-2 text-xs font-semibold text-[var(--ink-muted)] transition-colors hover:text-[var(--foreground)]"
+                >
+                  {t(text.useSample)}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setClashInput("")}
+                  className="rounded-md border border-[var(--rule)] bg-[var(--surface-strong)] px-3 py-2 text-xs font-semibold text-[var(--ink-muted)] transition-colors hover:text-[var(--foreground)]"
+                >
+                  {t(text.clear)}
+                </button>
+              </div>
+            </div>
+
+            <label className="mt-4 block text-sm font-semibold text-[var(--foreground)]">
+              {t(text.clashInput)}
+              <textarea
+                value={clashInput}
+                onChange={(event) => setClashInput(event.target.value)}
+                className="mt-2 min-h-[28.45rem] w-full resize-y rounded-md border border-[var(--rule)] bg-[var(--surface-strong)] p-3 font-mono text-xs leading-5 outline-none focus:border-[var(--foreground)]"
+                spellCheck={false}
+              />
+            </label>
+
+            <div className="mt-4 flex items-center justify-between gap-3">
+              <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[var(--teal)]">
+                {t(text.shadowrocketOutput)}
+              </h3>
+              <CopyButton value={shadowrocketResult.output} label={t(text.copy)} copiedLabel={t(text.copied)} />
+            </div>
+            <pre className="mt-2 min-h-[18rem] overflow-auto whitespace-pre-wrap break-all rounded-md border border-[var(--rule)] bg-[#16231b] p-4 text-xs leading-6 text-[#edf2ee]">
+              {shadowrocketResult.output || t(text.noShadowrocket)}
+            </pre>
+            {shadowrocketResult.messages.length > 0 && (
+              <ul className="mt-3 space-y-1 text-sm text-[var(--tomato)]">
+                {shadowrocketResult.messages.map((message) => (
+                  <li key={message}>{message}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-8 border border-[var(--rule)] bg-[var(--surface)] p-4 text-sm leading-6 text-[var(--ink-muted)]">
+          <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[var(--tomato)]">
+            {t(text.notes)}
+          </h2>
+          <ul className="mt-3 grid gap-2 md:grid-cols-2">
+            <li>{t(text.noteHost)}</li>
+            <li>{t(text.noteScope)}</li>
+          </ul>
+        </div>
       </div>
     </section>
   );

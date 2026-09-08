@@ -28,23 +28,36 @@ export const ui = {
   },
   hero: {
     badge: { en: "Independent apps and tools", zh: "独立应用和小工具" },
-    titleLead: { en: "Useful apps, ", zh: "做点好用的，" },
-    titleAccent: { en: "without the extras.", zh: "也做得简单一点。" },
+    // EN keeps a trailing space before the accent phrase; ZH has none. The Hero
+    // joins them without inserting extra whitespace.
+    titleLead: { en: "Useful apps.", zh: "做点好用的。" },
+    titleAccent: { en: "Less friction.", zh: "让日常简单一点。" },
     subtitle: {
-      en: "Small, focused software for macOS, iOS, and the web.",
-      zh: "为 macOS、iOS 和网页做一些专注、顺手的小软件。",
+      en: "Small apps for macOS, iOS, and the web. Thoughtfully made for the things you do every day.",
+      zh: "我们为 macOS、iOS 和网页做一些小应用。每个应用解决一个具体问题。",
     },
+    ctaExplore: { en: "See all apps", zh: "查看全部应用" },
+    ctaGithub: { en: "GitHub", zh: "GitHub" },
+    catalogLabel: { en: "Apps", zh: "应用" },
+    catalogMeta: { en: "Available now", zh: "当前可用" },
+    catalogEmpty: { en: "App information is loading.", zh: "正在加载应用信息。" },
   },
   apps: {
-    heading: { en: "Apps", zh: "应用" },
+    eyebrow: { en: "The shelf", zh: "工具架" },
+    heading: { en: "Apps from baomi", zh: "baomi 的应用" },
+    sub: {
+      en: "Native apps and developer tools for the things we do often.",
+      zh: "一些原生应用和开发工具，用来处理经常遇到的事情。",
+    },
     count: { en: "apps", zh: "个应用" },
     viewDetails: { en: "View details", zh: "查看详情" },
   },
   tools: {
-    heading: { en: "Browser tools", zh: "浏览器工具" },
+    eyebrow: { en: "Tools", zh: "工具" },
+    heading: { en: "Tools that run in your browser", zh: "直接在浏览器里用的工具" },
     sub: {
-      en: "Small utilities that work locally, without an account.",
-      zh: "无需账号，直接在本地处理。",
+      en: "No account required. Your configuration stays in the browser.",
+      zh: "不需要账号，配置内容只在浏览器本地处理。",
     },
     count: { en: "tools", zh: "个工具" },
     open: { en: "Open tool", zh: "打开工具" },
