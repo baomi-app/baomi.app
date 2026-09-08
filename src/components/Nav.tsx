@@ -1,42 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Logo } from "@/components/Logo";
 import { LangToggle } from "@/components/LangToggle";
 import { ui, useLocale } from "@/i18n";
 
 export function Nav() {
   const { t } = useLocale();
-  return (
-    <header className="sticky top-0 z-50 border-b border-[var(--rule)] bg-[color:var(--background)]/90 backdrop-blur-xl">
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="transition-opacity hover:opacity-75">
-          <Logo />
-        </Link>
-        <div className="flex items-center gap-3 text-sm font-medium text-[var(--ink-muted)] sm:gap-5">
-          <Link
-            href="/#apps"
-            className="hidden rounded-lg px-2 py-1 transition-colors hover:text-[var(--foreground)] sm:inline"
-          >
-            {t(ui.nav.apps)}
-          </Link>
-          <Link
-            href="/tools"
-            className="rounded-lg px-2 py-1 transition-colors hover:text-[var(--foreground)]"
-          >
-            {t(ui.nav.tools)}
-          </Link>
-          <a
-            href="https://github.com/baomi-app"
-            target="_blank"
-            rel="noreferrer"
-            className="hidden rounded-lg px-2 py-1 transition-colors hover:text-[var(--foreground)] md:inline"
-          >
-            GitHub
-          </a>
-          <LangToggle />
-        </div>
-      </nav>
-    </header>
-  );
+  const path = usePathname();
+  return <header className="site-header"><nav className="shell nav-inner" aria-label={t({ en: "Main navigation", zh: "主导航" })}>
+    <Link href="/" aria-label={t({ en: "baomi.app home", zh: "baomi.app 首页" })}><Logo /></Link>
+    <div className="nav-links"><Link href="/#apps" aria-current={!path.startsWith("/tools") ? "page" : undefined}>{t(ui.nav.apps)}</Link><Link href="/tools" aria-current={path.startsWith("/tools") ? "page" : undefined}>{t(ui.nav.tools)}</Link><a className="nav-github" href="https://github.com/baomi-app" target="_blank" rel="noreferrer">GitHub ↗</a></div>
+    <LangToggle />
+  </nav></header>;
 }

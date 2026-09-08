@@ -11,26 +11,26 @@ const siteUrl = "https://baomi.app";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "baomi.app | independent apps and tools",
+    default: "baomi.app | Independent apps · 独立应用",
     template: "%s | baomi.app",
   },
   description:
-    "Independent apps and browser tools for macOS, iOS, and the web.",
+    "Independent apps and browser tools for macOS, iOS, and the web. 为日常而做的独立应用与网页工具。",
   keywords: ["baomi", "apps", "macOS", "tools", "open source"],
   authors: [{ name: "baomi" }],
   openGraph: {
     type: "website",
     url: siteUrl,
-    title: "baomi.app | independent apps and tools",
+    title: "baomi.app | Independent apps · 独立应用",
     description:
-      "Independent apps and browser tools for macOS, iOS, and the web.",
+      "Independent apps and browser tools for macOS, iOS, and the web. 为日常而做的独立应用与网页工具。",
     siteName: "baomi.app",
   },
   twitter: {
     card: "summary_large_image",
-    title: "baomi.app | independent apps and tools",
+    title: "baomi.app | Independent apps · 独立应用",
     description:
-      "Independent apps and browser tools for macOS, iOS, and the web.",
+      "Independent apps and browser tools for macOS, iOS, and the web. 为日常而做的独立应用与网页工具。",
   },
 };
 

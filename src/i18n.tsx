@@ -30,10 +30,10 @@ export const ui = {
     badge: { en: "Independent apps and tools", zh: "独立应用和小工具" },
     // EN keeps a trailing space before the accent phrase; ZH has none. The Hero
     // joins them without inserting extra whitespace.
-    titleLead: { en: "Useful apps, ", zh: "做点好用的，" },
-    titleAccent: { en: "without the extras.", zh: "也做得简单一点。" },
+    titleLead: { en: "Useful apps.", zh: "做点好用的。" },
+    titleAccent: { en: "Less friction.", zh: "让日常简单一点。" },
     subtitle: {
-      en: "We make small apps for macOS, iOS, and the web. Each one solves a specific problem.",
+      en: "Small apps for macOS, iOS, and the web. Thoughtfully made for the things you do every day.",
       zh: "我们为 macOS、iOS 和网页做一些小应用。每个应用解决一个具体问题。",
     },
     ctaExplore: { en: "See all apps", zh: "查看全部应用" },

@@ -19,7 +19,7 @@ export function AppIcon({
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={app.iconUrl}
-        alt={`${app.content.name} icon`}
+        alt=""
         loading="lazy"
         onError={() => setErrored(true)}
         className={`rounded-lg object-cover shadow-sm ring-1 ring-black/10 ${className}`}
