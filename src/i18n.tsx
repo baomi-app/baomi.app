@@ -43,7 +43,6 @@ export const ui = {
     catalogEmpty: { en: "App information is loading.", zh: "正在加载应用信息。" },
   },
   apps: {
-    eyebrow: { en: "The shelf", zh: "工具架" },
     heading: { en: "Apps from baomi", zh: "baomi 的应用" },
     sub: {
       en: "Native apps and developer tools for the things we do often.",
@@ -53,7 +52,6 @@ export const ui = {
     viewDetails: { en: "View details", zh: "查看详情" },
   },
   tools: {
-    eyebrow: { en: "Tools", zh: "工具" },
     heading: { en: "Tools that run in your browser", zh: "直接在浏览器里用的工具" },
     sub: {
       en: "No account required. Your configuration stays in the browser.",

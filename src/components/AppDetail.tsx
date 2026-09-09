@@ -47,11 +47,11 @@ export function AppDetail({ app }: { app: AppView }) {
               <RepoStats meta={app.meta} className="mt-5" />
               <div className="mt-7 flex flex-wrap gap-3">
                 {content.links.map((link, index) => (
-                  <a key={link.href} href={link.href} target="_blank" rel="noreferrer" className={index === 0 ? "inline-flex min-h-11 items-center whitespace-nowrap rounded-[14px] bg-[var(--accent)] px-5 text-sm font-semibold text-[var(--on-accent)] transition-[transform,background-color,color] duration-300 hover:-translate-y-0.5 hover:opacity-85 active:translate-y-px" : "inline-flex min-h-11 items-center whitespace-nowrap rounded-[14px] border border-[var(--rule)] bg-[var(--background)] px-5 text-sm font-semibold transition-colors hover:border-[var(--accent)] active:translate-y-px"}>
+                  <a key={link.href} href={link.href} target="_blank" rel="noreferrer" className={index === 0 ? "inline-flex min-h-11 items-center whitespace-nowrap rounded-full bg-[var(--accent)] px-5 text-sm font-semibold text-[var(--on-accent)] transition-[transform,background-color,color] duration-300 hover:-translate-y-0.5 hover:opacity-85 active:translate-y-px" : "inline-flex min-h-11 items-center whitespace-nowrap rounded-full border border-[var(--rule)] bg-[var(--background)] px-5 text-sm font-semibold transition-colors hover:border-[var(--accent)] active:translate-y-px"}>
                     {t(link.label)}
                   </a>
                 ))}
-                {content.privacy && <Link href={`/${app.id}/privacy`} className="inline-flex min-h-11 items-center rounded-[14px] border border-[var(--rule)] px-5 text-sm font-semibold">{locale === "zh" ? "隐私政策" : "Privacy"}</Link>}
+                {content.privacy && <Link href={`/${app.id}/privacy`} className="inline-flex min-h-11 items-center rounded-full border border-[var(--rule)] px-5 text-sm font-semibold">{locale === "zh" ? "隐私政策" : "Privacy"}</Link>}
               </div>
             </div>
           </div>

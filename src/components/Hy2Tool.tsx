@@ -565,7 +565,7 @@ function CopyButton({ value, label, copiedLabel }: { value: string; label: strin
           window.setTimeout(() => setCopied(false), 1200);
         } catch { setFailed(true); }
       }}
-      className="rounded-md border border-[var(--foreground)] bg-[var(--surface)] px-3 py-2 text-xs font-semibold text-[var(--foreground)] transition-colors hover:bg-[var(--surface-strong)] disabled:cursor-not-allowed disabled:opacity-45"
+      className="rounded-full border border-[var(--foreground)] bg-[var(--surface)] px-3.5 py-2 text-xs font-semibold text-[var(--foreground)] transition-colors hover:bg-[var(--surface-strong)] disabled:cursor-not-allowed disabled:opacity-45"
     >
       {failed ? t({ en: "Select text to copy", zh: "请选中文字复制" }) : copied ? copiedLabel : label}
     </button>
@@ -620,8 +620,7 @@ export function Hy2Tool() {
   return (
     <section className="relative overflow-hidden border-b border-[var(--rule)]">
       <div className="mx-auto max-w-6xl px-6 pt-12 pb-20 sm:pt-16">
-        <span className="inline-flex items-center gap-2 rounded-full bg-[var(--accent-soft)] px-3.5 py-2 text-xs font-medium text-[var(--accent)]">
-          <span className="h-2 w-2 bg-[var(--tomato)]" />
+        <span className="inline-flex items-center rounded-full bg-[var(--accent-soft)] px-3.5 py-2 text-xs font-medium text-[var(--accent)]">
           {t(text.badge)}
         </span>
 
@@ -642,21 +641,21 @@ export function Hy2Tool() {
         <div className="mt-8 grid gap-6 xl:grid-cols-2">
           <div className="min-w-0 rounded-[18px] border border-[var(--rule)] bg-[var(--surface-strong)] p-5">
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--rule)] pb-4">
-              <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[var(--tomato)]">
+              <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
                 {t(text.serverPanel)}
               </h2>
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={() => setHy2Input(sampleHy2Server)}
-                  className="rounded-md border border-[var(--rule)] bg-[var(--surface-strong)] px-3 py-2 text-xs font-semibold text-[var(--ink-muted)] transition-colors hover:text-[var(--foreground)]"
+                  className="rounded-full border border-[var(--rule)] bg-[var(--surface-strong)] px-3.5 py-2 text-xs font-semibold text-[var(--ink-muted)] transition-colors hover:text-[var(--foreground)]"
                 >
                   {t(text.useSample)}
                 </button>
                 <button
                   type="button"
                   onClick={() => setHy2Input("")}
-                  className="rounded-md border border-[var(--rule)] bg-[var(--surface-strong)] px-3 py-2 text-xs font-semibold text-[var(--ink-muted)] transition-colors hover:text-[var(--foreground)]"
+                  className="rounded-full border border-[var(--rule)] bg-[var(--surface-strong)] px-3.5 py-2 text-xs font-semibold text-[var(--ink-muted)] transition-colors hover:text-[var(--foreground)]"
                 >
                   {t(text.clear)}
                 </button>
@@ -716,7 +715,7 @@ export function Hy2Tool() {
             </label>
 
             <div className="mt-4 flex items-center justify-between gap-3">
-              <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[var(--teal)]">
+              <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
                 {t(text.clashOutput)}
               </h3>
               <CopyButton value={clashResult.output} label={t(text.copy)} copiedLabel={t(text.copied)} />
@@ -725,9 +724,9 @@ export function Hy2Tool() {
               {clashResult.output || t(text.noClash)}
             </pre>
             {clashResult.messages.length > 0 && (
-              <ul className="mt-3 space-y-1 text-sm text-[var(--tomato)]">
+              <ul className="mt-3 space-y-1 text-sm">
                 {clashResult.messages.map((message) => (
-                  <li key={message}>{message}</li>
+                  <li key={message} className={clashResult.output ? "text-[var(--accent)]" : "font-medium text-[var(--danger)]"}>{message}</li>
                 ))}
               </ul>
             )}
@@ -735,21 +734,21 @@ export function Hy2Tool() {
 
           <div className="min-w-0 rounded-[18px] border border-[var(--rule)] bg-[var(--surface-strong)] p-5">
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--rule)] pb-4">
-              <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[var(--tomato)]">
+              <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
                 {t(text.clashPanel)}
               </h2>
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={() => setClashInput(clashResult.output || sampleClash)}
-                  className="rounded-md border border-[var(--rule)] bg-[var(--surface-strong)] px-3 py-2 text-xs font-semibold text-[var(--ink-muted)] transition-colors hover:text-[var(--foreground)]"
+                  className="rounded-full border border-[var(--rule)] bg-[var(--surface-strong)] px-3.5 py-2 text-xs font-semibold text-[var(--ink-muted)] transition-colors hover:text-[var(--foreground)]"
                 >
                   {t(text.useSample)}
                 </button>
                 <button
                   type="button"
                   onClick={() => setClashInput("")}
-                  className="rounded-md border border-[var(--rule)] bg-[var(--surface-strong)] px-3 py-2 text-xs font-semibold text-[var(--ink-muted)] transition-colors hover:text-[var(--foreground)]"
+                  className="rounded-full border border-[var(--rule)] bg-[var(--surface-strong)] px-3.5 py-2 text-xs font-semibold text-[var(--ink-muted)] transition-colors hover:text-[var(--foreground)]"
                 >
                   {t(text.clear)}
                 </button>
@@ -767,7 +766,7 @@ export function Hy2Tool() {
             </label>
 
             <div className="mt-4 flex items-center justify-between gap-3">
-              <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[var(--teal)]">
+              <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
                 {t(text.shadowrocketOutput)}
               </h3>
               <CopyButton value={shadowrocketResult.output} label={t(text.copy)} copiedLabel={t(text.copied)} />
@@ -776,7 +775,7 @@ export function Hy2Tool() {
               {shadowrocketResult.output || t(text.noShadowrocket)}
             </pre>
             {shadowrocketResult.messages.length > 0 && (
-              <ul className="mt-3 space-y-1 text-sm text-[var(--tomato)]">
+              <ul className="mt-3 space-y-1 text-sm font-medium text-[var(--danger)]">
                 {shadowrocketResult.messages.map((message) => (
                   <li key={message}>{message}</li>
                 ))}
@@ -786,7 +785,7 @@ export function Hy2Tool() {
         </div>
 
         <div className="mt-8 border border-[var(--rule)] bg-[var(--surface)] p-4 text-sm leading-6 text-[var(--ink-muted)]">
-          <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[var(--tomato)]">
+          <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
             {t(text.notes)}
           </h2>
           <ul className="mt-3 grid gap-2 md:grid-cols-2">
